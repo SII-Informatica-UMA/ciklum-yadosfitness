@@ -6,32 +6,27 @@
   <title>Document</title>
 </head>
 <body>
-
   <div class="cabecera">
-    <div class="cuadrado">
-      <div class="primero">
-        <a href="#" class="inicio">INICIO</a>
-      </div>
-      <div class="segundo">
-        <a href="" class="dietas">DIETAS</a>
-      </div>
-      <div class="tercero">
-        <a href="" class="ejemplos">EJEMPLOS</a>
-      </div>
-      <div class="cuarto">
-        <a href="" class="usuario">USUARIO</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="cuerpo">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+      <li [ngbNavItem]="1">
+        <button ngbNavLink>One</button>
+         
+      </li>
+      <li [ngbNavItem]="2">
+        <button ngbNavLink>Two</button>
+         
+      </li>
+      <li [ngbNavItem]="3">
+        <button ngbNavLink>Three</button>
+         
+      </li>
+    </ul>
     
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    
+     
   </div>
-
-  <div class="pie"> 
-
-  </div>
-
+  
 
 </body>
 </html>
