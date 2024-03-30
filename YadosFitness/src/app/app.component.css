@@ -3,9 +3,8 @@ body{
 }
 
 .cabecera{
-    background-color: rgb(0, 0, 0);
+    background-color: black;
     position: relative; 
-    
 }
 
 .cabecera button{
@@ -21,7 +20,11 @@ body{
     color: black;
 }
 
-
+.nav-tabs {
+    border-bottom: none;
+    margin-bottom: -6px;
+  }
+  
 .d-inline-block{
     position: absolute; 
     right: 0;
@@ -45,4 +48,8 @@ body{
 
 svg{
     margin-bottom: 3px;
+}
+
+.contenido{
+    background-color: white;
 }
