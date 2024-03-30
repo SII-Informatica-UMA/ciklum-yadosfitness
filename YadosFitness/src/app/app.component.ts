@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NgbNavModule], 
+  imports: [RouterOutlet, NgbNavModule, NgbDropdownModule], 
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

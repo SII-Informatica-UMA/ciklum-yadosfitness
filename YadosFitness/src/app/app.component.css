@@ -4,6 +4,8 @@ body{
 
 .cabecera{
     background-color: rgb(0, 0, 0);
+    position: relative; 
+    
 }
 
 .cabecera button{
@@ -17,5 +19,27 @@ body{
 .nav-tabs .nav-link.active{
     background-color: rgb(104, 103, 103);
     color: black;
+}
+
+
+.d-inline-block{
+    position: absolute; 
+    right: 0;
+}
+
+.btn-secondary dropdown-toggle:hover {
+    background-color: black;
+    border-color: white;
+}
+
+.btn-secondary dropdown-toggle {
+    border-color: black;
+    padding: 5px 18px; /* Aumenta el relleno si el botón es demasiado pequeño */
+}
+
+#dropdownBasic1{
+    background-color: black;
+    border-color: white;
+    color: white;
 }
 

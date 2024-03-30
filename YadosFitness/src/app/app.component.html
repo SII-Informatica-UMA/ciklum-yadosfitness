@@ -15,11 +15,20 @@
          
       </li>
       <li [ngbNavItem]="4">
-        <button ngbNavLink>User</button>
+        <div ngbDropdown class="d-inline-block">
+          <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownBasic1" ngbDropdownToggle>
+            Open from outside
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            ñjgfnajlfhnañghagñaga
+
+            gagijagijagka
+            ggaojgoajga
+          </div>
+        </div>
       </li>
     </ul>
     
     <div [ngbNavOutlet]="nav" class="mt-2"></div>
 
   </div>
-
