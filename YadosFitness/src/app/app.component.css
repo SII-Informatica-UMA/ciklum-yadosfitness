@@ -3,5 +3,19 @@ body{
 }
 
 .cabecera{
-    background-color: rgb(155, 121, 121);
+    background-color: rgb(0, 0, 0);
 }
+
+.cabecera button{
+    color: white;
+}
+
+.cabecera button:focus{
+    color: black;
+}
+
+.nav-tabs .nav-link.active{
+    background-color: rgb(104, 103, 103);
+    color: black;
+}
+
