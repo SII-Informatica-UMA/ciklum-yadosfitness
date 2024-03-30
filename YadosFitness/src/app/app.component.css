@@ -34,7 +34,7 @@ body{
 
 .btn-secondary dropdown-toggle {
     border-color: black;
-    padding: 5px 18px; /* Aumenta el relleno si el botón es demasiado pequeño */
+    padding: 3px 18px; /* Aumenta el relleno si el botón es demasiado pequeño */
 }
 
 #dropdownBasic1{
@@ -43,3 +43,6 @@ body{
     color: white;
 }
 
+svg{
+    margin-bottom: 3px;
+}
