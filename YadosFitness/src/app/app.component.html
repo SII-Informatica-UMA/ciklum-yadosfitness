@@ -35,7 +35,7 @@
 
 <div [ngbNavOutlet]="nav" class="mt-2"></div>
 <div class="contenido">
-<ng-container *ngIf="active === 1">Contenido del Inicio</ng-container>
+<ng-container *ngIf="active === 1"><app-inicio></app-inicio></ng-container>
 <ng-container *ngIf="active === 2"><app-dietas></app-dietas></ng-container>
 <ng-container *ngIf="active === 3">Contenido de Recetas</ng-container>
 <ng-container *ngIf="active === 4">Contenido de Usuario</ng-container>

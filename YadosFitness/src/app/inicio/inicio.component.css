@@ -1,0 +1,9 @@
+#carouselExampleControls {
+    max-width: 800px; /* Define un ancho máximo para el carousel */
+    margin: 0 auto; /* Centra el carousel horizontalmente */
+  }
+  
+  .carousel-item img {
+    max-height: 300px; /* Ajusta la altura máxima de las imágenes del carousel */
+    width: auto; /* Permite que las imágenes se ajusten proporcionalmente al cambiar la altura */
+  }
