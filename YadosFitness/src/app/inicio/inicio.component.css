@@ -1,9 +1,35 @@
 #carouselExampleControls {
-    max-width: 800px; /* Define un ancho máximo para el carousel */
-    margin: 0 auto; /* Centra el carousel horizontalmente */
-  }
+  width: 100%; /* Asegura que el carrusel ocupe todo el ancho */
+  font-size: 0; /* Oculta el texto */
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 400px;
+  background-position: center;
+  background-repeat: no-repeat;
   
-  .carousel-item img {
-    max-height: 300px; /* Ajusta la altura máxima de las imágenes del carousel */
-    width: auto; /* Permite que las imágenes se ajusten proporcionalmente al cambiar la altura */
-  }
+  object-fit: cover; /* Cubrirá completamente el contenedor, recortando la imagen si es necesario */
+}
+.container-fluid {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+h2{
+  font-size: 45px;
+  font-weight: 700;
+  margin-top:50px;
+  text-align: center;
+}
+
+p {
+  font-size: 18px; /* Cambia el tamaño de la fuente */
+  color: #333; /* Cambia el color del texto */
+  text-align: center; /* Alinea el texto a ambos márgenes */
+  margin-top: 20px;
+  margin: 20px auto;
+  max-width: 500px; /* Limita el ancho del párrafo */
+  line-height: 1.8;
+}
+
