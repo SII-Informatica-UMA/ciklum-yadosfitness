@@ -22,23 +22,25 @@
           </svg>
             Usuario 
         </button>
-        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-          ñjgfnajlfhnañghagñaga
-
-          gagijagijagka
-          ggaojgoajga
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="log">
+          <a *ngIf="!usuarioSesion" class="btn btn-primary" (click)="mostrarLogin()">Iniciar </a>
+          
+          <button *ngIf="usuarioSesion" class="btn btn-primary" (click)="logout()">Cerrar sesión</button>
         </div>
       </div>
     </li>
   </ul>
 </div> 
+<div *ngIf="mostrarVentana" class="login-overlay">
+  <app-login></app-login>
+</div>
 
 <div [ngbNavOutlet]="nav" class="mt-2"></div>
 <div class="contenido">
 <ng-container *ngIf="active === 1"><app-inicio></app-inicio></ng-container>
 <ng-container *ngIf="active === 2"><app-dietas></app-dietas></ng-container>
 <ng-container *ngIf="active === 3">Contenido de Recetas</ng-container>
-<ng-container *ngIf="active === 4">Contenido de Usuario</ng-container>
+
 </div>
 <div class="footer-basic ">
   <footer>
