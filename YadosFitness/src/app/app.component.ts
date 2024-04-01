@@ -6,11 +6,12 @@ import { DietasComponent } from './dietas/dietas.component';
 import { InicioComponent } from './inicio/inicio.component';
 import { UsuariosService } from './services/usuarios.service';
 import { FormsModule } from '@angular/forms';
+import { LoginComponent } from './login/login.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NgbNavModule, NgbDropdownModule, DietasComponent, CommonModule, InicioComponent, RouterLink, FormsModule, TitleCasePipe], 
+  imports: [RouterOutlet, LoginComponent, NgbNavModule, NgbDropdownModule, DietasComponent, CommonModule, InicioComponent, RouterLink, FormsModule, TitleCasePipe], 
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -18,7 +19,7 @@ export class AppComponent {
   title = 'YadosFitness';
   active = 1;
   _rolIndex: number = 0;
-
+  mostrarVentana: boolean = false;
   constructor(private usuarioService: UsuariosService, private router: Router) {
     this.actualizarRol()
   }
@@ -48,7 +49,9 @@ export class AppComponent {
   get usuarioSesion() {
     return this.usuarioService.getUsuarioSesion();
   }
-
+  mostrarLogin() {
+  this.mostrarVentana = true;
+}
   logout() {
     this.usuarioService.doLogout();
     this.actualizarRol();

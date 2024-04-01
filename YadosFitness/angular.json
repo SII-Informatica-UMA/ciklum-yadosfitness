@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "YadosFitness": {
+    "gestion-usuarios": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/yados-fitness",
+            "outputPath": "dist/gestion-usuarios",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -26,17 +26,10 @@
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
               "src/styles.css"
             ],
-            "scripts": [
-            "node_modules/@popperjs/core/dist/umd/popper.min.js",
-            "node_modules/bootstrap/dist/js/bootstrap.min.js"],
-            "server": "src/main.server.ts",
-            "prerender": true,
-            "ssr": {
-              "entry": "server.ts"
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -66,10 +59,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "YadosFitness:build:production"
+              "buildTarget": "gestion-usuarios:build:production"
             },
             "development": {
-              "buildTarget": "YadosFitness:build:development"
+              "buildTarget": "gestion-usuarios:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -77,7 +70,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "YadosFitness:build"
+            "buildTarget": "gestion-usuarios:build"
           }
         },
         "test": {
@@ -93,7 +86,6 @@
               "src/assets"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -103,6 +95,6 @@
     }
   },
   "cli": {
-    "analytics": "d8673a3f-b922-4eaf-a30c-fae116be30b6"
+    "analytics": "0966b86a-e07a-4d40-9e94-4272977c8c34"
   }
 }
