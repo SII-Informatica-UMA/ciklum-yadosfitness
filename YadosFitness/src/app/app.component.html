@@ -22,11 +22,9 @@
           </svg>
             Usuario 
         </button>
-        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-          ñjgfnajlfhnañghagñaga
-
-          gagijagijagka
-          ggaojgoajga
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="log">
+          <a *ngIf="!usuarioSesion"  [routerLink]="'/login'"><button class="btn btn-primary">Iniciar sesión</button></a>
+      <button *ngIf="usuarioSesion"  class="btn btn-primary" (click)="logout()">Cerrar sesión</button>
         </div>
       </div>
     </li>

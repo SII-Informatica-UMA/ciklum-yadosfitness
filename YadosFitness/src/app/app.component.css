@@ -104,3 +104,17 @@ svg{
     
 }
 
+.log{
+    background-color: black;
+    padding: 5px;
+}
+
+.log button:hover{
+    background-color: rgb(41, 40, 40);
+    color: white;
+}
+
+.log button{
+    font-size: 15px;
+    text-align: center;
+}
