@@ -23,7 +23,7 @@
             Usuario 
         </button>
         <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="log">
-          <a *ngIf="!usuarioSesion" class="btn btn-primary" (click)="mostrarLogin()">Iniciar </a>
+          <a *ngIf="!usuarioSesion" class="btn btn-primary" (click)="mostrarLogin()">Iniciar sesión</a>
           
           <button *ngIf="usuarioSesion" class="btn btn-primary" (click)="logout()">Cerrar sesión</button>
         </div>
