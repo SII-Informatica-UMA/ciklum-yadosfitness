@@ -10,6 +10,7 @@ body{
 .cabecera{
     background-color: black;
     position: relative; 
+    z-index: 2;
 }
 
 .cabecera button{
@@ -29,6 +30,7 @@ body{
     border-bottom: none;
     margin-bottom: -6px;
   }
+
   
 .d-inline-block{
     position: absolute; 
@@ -107,6 +109,7 @@ svg{
 .log{
     background-color: black;
     padding: 5px;
+    
 }
 
 .log button:hover{
