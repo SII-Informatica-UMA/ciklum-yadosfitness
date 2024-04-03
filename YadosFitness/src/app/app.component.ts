@@ -7,11 +7,12 @@ import { InicioComponent } from './inicio/inicio.component';
 import { UsuariosService } from './services/usuarios.service';
 import { FormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
+import { ListadoUsuarioComponent } from './listado-usuario/listado-usuario.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, LoginComponent, NgbNavModule, NgbDropdownModule, DietasComponent, CommonModule, InicioComponent, RouterLink, FormsModule, TitleCasePipe], 
+  imports: [RouterOutlet, LoginComponent, NgbNavModule, NgbDropdownModule, DietasComponent, CommonModule, InicioComponent, RouterLink, FormsModule, TitleCasePipe, ListadoUsuarioComponent], 
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

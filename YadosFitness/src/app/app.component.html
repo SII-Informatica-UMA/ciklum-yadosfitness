@@ -14,6 +14,9 @@
           
       </li>
       <li [ngbNavItem]="4">
+        <button ngbNavLink (click)="active = 4">Administración</button>
+      </li>
+      <li [ngbNavItem]="5">
         <div ngbDropdown class="d-inline-block">
           <button type="button" class="btn btn-secondary dropdown-toggle d-flex align-items-center" id="dropdownBasic1" ngbDropdownToggle>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -42,7 +45,7 @@
   <ng-container *ngIf="active === 1"><app-inicio></app-inicio></ng-container>
   <ng-container *ngIf="active === 2"><app-dietas></app-dietas></ng-container>
   <ng-container *ngIf="active === 3">Contenido de Recetas</ng-container>
-
+  <ng-container *ngIf="active === 4"><app-listado-usuario></app-listado-usuario></ng-container>
   </div>
   <div class="footer-basic ">
     <footer>
