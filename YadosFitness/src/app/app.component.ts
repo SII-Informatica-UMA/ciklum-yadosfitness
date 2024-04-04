@@ -8,11 +8,15 @@ import { UsuariosService } from './services/usuarios.service';
 import { FormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { ListadoUsuarioComponent } from './listado-usuario/listado-usuario.component';
+import { DietaUsuarioComponent } from './dieta-usuario/dieta-usuario.component'
+import { Rol } from './entities/login';
+import { DietaEntrenadorComponent } from './dieta-entrenador/dieta-entrenador.component'
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, LoginComponent, NgbNavModule, NgbDropdownModule, DietasComponent, CommonModule, InicioComponent, RouterLink, FormsModule, TitleCasePipe, ListadoUsuarioComponent], 
+  imports: [RouterOutlet, LoginComponent, NgbNavModule, NgbDropdownModule, DietasComponent, CommonModule, InicioComponent, 
+    RouterLink, FormsModule, TitleCasePipe, ListadoUsuarioComponent, DietaUsuarioComponent, DietaEntrenadorComponent], 
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -58,6 +62,12 @@ export class AppComponent {
     this.actualizarRol();
     this.router.navigateByUrl('/login');
   }
+
+  isAdmin() : boolean {
+    return this.usuarioService._rolCentro?.rol == Rol.ADMINISTRADOR;
+  }
+
 }
+
 
 
