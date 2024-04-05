@@ -1,7 +1,10 @@
 export interface Comida{
-    hora_dia: string;
-    alimento: string;
-    cantidad: number;
-    foto: string;
-    id: number;
+  nombre: "string",
+  descripcion: "string",
+  observaciones: "string",
+  objetivo: "string",
+  duracionDias: 0,
+  alimentos: [],
+  recomendaciones: "string",
+  id: 0;
 }
