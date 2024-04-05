@@ -1,4 +1,4 @@
-
+import { Dieta } from './dieta'
 export interface Login {
   email: string;
   password: string;
@@ -29,6 +29,7 @@ export interface UsuarioSesion {
   email: string;
   jwt: string;
   roles: RolCentro[];
+  dietas : Dieta[];
 }
 
 export type MapaCentros = Map<number, string>;

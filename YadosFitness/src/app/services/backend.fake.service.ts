@@ -5,10 +5,33 @@ import { SECRET_JWT } from "../config/config";
 import { from } from "rxjs";
 import * as jose from 'jose';
 import { FRONTEND_URI } from "../config/config";
-
+import { Dieta } from "../entities/dieta";
 
 // Este servicio imita al backend pero utiliza localStorage para almacenar los datos
-
+const dietasC: Dieta [] = [
+  {
+    nombre: 'manana',
+    descripcion: 'gfjagfjgf',
+    observaciones: 'añfgnjafja',
+    objetivo: 'fjafaf',
+    duracionDias: 2,
+    alimentos: ['arroz', 'pollo'],
+    recomendaciones: 'comer',
+    id: 1,
+    usuarioId: 2
+  },
+  {
+    nombre: 'tarde',
+    descripcion: 'afafaf',
+    observaciones: 'añfgnjafja',
+    objetivo: 'fjafaf',
+    duracionDias: 2,
+    alimentos: ['salchicha', 'pollo'],
+    recomendaciones: 'comer',
+    id: 1,
+    usuarioId: 1
+  },
+]
 const usuariosC: Usuario [] = [
   {
     id: 1,
@@ -17,7 +40,8 @@ const usuariosC: Usuario [] = [
     apellido2: 'Admin',
     email: 'admin@uma.es',
     administrador: true,
-    password: 'admin'
+    password: 'admin',
+    dietas: []
   },
   {
     id: 2,
@@ -26,7 +50,18 @@ const usuariosC: Usuario [] = [
     apellido2: 'Ramos',
     email: 'antonio@uma.es',
     administrador: false,
-    password: '5678'
+    password: '5678',
+    dietas:[]
+  },
+  {
+    id: 3,
+    nombre: 'pepe',
+    apellido1: 'García',
+    apellido2: 'Ramos',
+    email: 'pepe@uma.es',
+    administrador: false,
+    password: 'pepe',
+    dietas:[]
   },
 ];
 
@@ -36,7 +71,7 @@ const usuariosC: Usuario [] = [
 export class BackendFakeService {
   private usuarios: Usuario [];
   private forgottenPasswordTokens;
-
+  private dietas: Dieta[];
   constructor() {
     let _usuarios = localStorage.getItem('usuarios');
     if (_usuarios) {
@@ -51,8 +86,39 @@ export class BackendFakeService {
     } else {
       this.forgottenPasswordTokens = new Map();
     }
+    let storedDietas = localStorage.getItem('dietas');
+    if(storedDietas){
+      this.dietas = storedDietas ? JSON.parse(storedDietas) : [];
+    } else {
+      this.dietas = [...dietasC];
+    }
+  }
+  getDietas(): Observable<Dieta[]> {
+    return of(this.dietas);
   }
 
+  
+  crearDieta(dieta: Dieta, usuarioId: number): Observable<Dieta> {
+    const usuario = this.usuarios.find(u => u.id == usuarioId);
+    
+    if (!usuario) {
+      return new Observable<Dieta>(observer => {
+        observer.error('Usuario no encontrado');
+      });
+    }
+
+    dieta.id = this.dietas.length + 1; // Asignar un ID único a la nueva dieta
+    dieta.usuarioId = usuarioId; // Asignar el ID del usuario a la dieta
+
+    this.dietas.push(dieta); // Agregar la nueva dieta al arreglo de dietas
+    usuario.dietas.push(dieta);
+    this.guardarDietasEnLocalStorage(); // Guardar las dietas en el almacenamiento local
+
+    return of(dieta); // Devolver la nueva dieta creada
+  }
+  private guardarDietasEnLocalStorage(): void {
+    localStorage.setItem('dietas', JSON.stringify(this.dietas));
+  }
   getUsuarios(): Observable<Usuario[]> {
     return of(this.usuarios);
   }
@@ -116,7 +182,6 @@ export class BackendFakeService {
     this.guardarUsuariosEnLocalStorage();
     return of();
   }
-
   getUsuario(id: number): Observable<Usuario> {
     let u = this.usuarios.find(u => u.id == id);
     if (!u) {

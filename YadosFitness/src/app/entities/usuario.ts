@@ -1,3 +1,4 @@
+import { Dieta } from "./dieta";
 export interface Usuario {
   id: number;
   nombre: string;
@@ -6,6 +7,7 @@ export interface Usuario {
   email: string;
   password: string;
   administrador: boolean;
+  dietas : Dieta[]
 }
 
 export class UsuarioImpl implements Usuario {
@@ -16,7 +18,7 @@ export class UsuarioImpl implements Usuario {
   email: string;
   password: string;
   administrador: boolean;
-
+  dietas: Dieta[];
   constructor() {
     this.id = 0;
     this.nombre = '';
@@ -25,5 +27,6 @@ export class UsuarioImpl implements Usuario {
     this.email = '';
     this.password = '';
     this.administrador = false;
+    this.dietas = []
   }
 }

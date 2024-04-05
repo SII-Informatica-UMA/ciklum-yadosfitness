@@ -12,7 +12,8 @@ export const usuarios: UsuarioSesion [] = [
       {rol: Rol.ADMINISTRADOR},
       {rol: Rol.GERENTE, centro: 1, nombreCentro: 'Málaga'},
       {rol: Rol.GERENTE, centro: 2, nombreCentro: 'Cádiz'},
-    ]
+    ],
+    dietas: []
   }
 ]
 

@@ -28,7 +28,8 @@ export class UsuariosService {
         apellido2: obj.usuario.apellido2,
         email: obj.usuario.email,
         roles: obj.usuario.administrador?[{rol: Rol.ADMINISTRADOR}]:[],
-        jwt: obj.jwt
+        jwt: obj.jwt,
+        dietas: obj.usuario.dietas
       };
     }));
     return usuarioSesion
