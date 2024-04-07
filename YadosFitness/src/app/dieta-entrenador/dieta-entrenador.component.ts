@@ -8,10 +8,11 @@ import { Rol } from '../entities/login';
 import { FormularioDietaComponent } from '../formulario-dieta/formulario-dieta.component';
 import { FormularioUsuarioComponent } from '../formulario-usuario/formulario-usuario.component';
 import { Dieta } from '../entities/dieta';
+import { DetalleDietaComponent } from '../detalle-dieta/detalle-dieta.component';
 @Component({
   selector: 'app-dieta-entrenador',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DetalleDietaComponent],
   templateUrl: './dieta-entrenador.component.html',
   styleUrl: './dieta-entrenador.component.css'
 })

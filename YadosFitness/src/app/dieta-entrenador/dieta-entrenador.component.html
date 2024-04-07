@@ -11,9 +11,9 @@
         <br>
         <button type="button" class="btn btn-outline-primary bi bi-plus-lg" (click)="aniadirDieta()"></button>
       </div>
-      
-      
-
+      <div class="col-md-6" *ngIf="dietaElegida">
+        <app-detalle-dieta [dieta]="dietaElegida"></app-detalle-dieta>
+      </div>
     </div>
   </div>
   
