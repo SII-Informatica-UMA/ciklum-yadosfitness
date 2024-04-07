@@ -117,6 +117,18 @@ export class BackendFakeService {
       this.dietas = [...dietasC];
     }
   }
+
+  eliminarDieta(dieta: Dieta, usuarioId: number): Observable<Dieta> {
+    let i = this.dietas.findIndex(d => d.id === dieta.id);
+    if (i < 0) {
+      return new Observable<Dieta>(observer => {
+        observer.error('Dieta no encontrada');
+      });
+    }
+    this.dietas.splice(i, 1);
+    this.guardarDietasEnLocalStorage();
+    return of(dieta);
+  }
   getDietas(): Observable<Dieta[]> {
     return of(this.dietas);
   }

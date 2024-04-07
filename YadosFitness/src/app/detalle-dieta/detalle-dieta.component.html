@@ -39,5 +39,11 @@
         <label class="col-md-3" for="usuarioId">Id de usuario:</label>
         <span class="col-md-9 offset-2 offset-md-0">{{dieta?.usuarioId}}</span>
     </div>
+    
+    <div class="row">
+        <button class="col-auto btn btn-outline-primary" (click)="eliminarDieta()">Eliminar <i class="bi bi-trash-fill"></i></button>
+        <div class="col-1"></div>
+        <button class="col-auto btn btn-outline-primary" (click)="editarDieta()">Editar <i class="bi bi-pencil-fill"></i></button>
+      </div>
   </div>
   

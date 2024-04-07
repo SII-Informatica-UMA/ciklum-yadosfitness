@@ -6,7 +6,7 @@ export interface Dieta{
   duracionDias: number,
   alimentos: string[],
   recomendaciones: string,
-  id: number;
+  id: number ;
   usuarioId: number;
-  creadorId: number | undefined ;//*
+  creadorId: number | undefined ;
 }

@@ -13,6 +13,9 @@ export class DietaService {
   getDietas(): Observable<Dieta[]>{
     return this.backend.getDietas();
   }
+  eliminarDieta(dieta: Dieta, usuarioId: number): Observable<Dieta> {
+    return this.backend.eliminarDieta(dieta, usuarioId);
+  }
 
   crearDieta(dieta: Dieta, usuarioId: number): Observable<Dieta> {
     return this.backend.crearDieta(dieta, usuarioId);

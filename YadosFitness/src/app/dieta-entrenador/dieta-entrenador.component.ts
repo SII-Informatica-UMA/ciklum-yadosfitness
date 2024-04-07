@@ -60,4 +60,10 @@ export class DietaEntrenadorComponent {
       this.ngOnInit();
     }, (reason) => {}) 
   }
+
+  eliminarDieta(dieta: Dieta): void {
+    this.dietaService.eliminarDieta(dieta, dieta.usuarioId);
+    this.ngOnInit();
+    this.dietaElegida = undefined;
+  }
 }
