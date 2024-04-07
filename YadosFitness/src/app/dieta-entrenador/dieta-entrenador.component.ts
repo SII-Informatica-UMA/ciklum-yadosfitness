@@ -54,7 +54,7 @@ export class DietaEntrenadorComponent {
     let ref = this.modalService.open(FormularioDietaComponent);
     ref.componentInstance.accion = "Añadir";
     ref.componentInstance.contacto = { nombre: '', descripcion: '', observaciones:'', objetivo:'', duracionDias: 0, 
-    alimentos: [], recomendaciones:'', id: 0, usuarioId:0};
+    alimentos: [], recomendaciones:'', id: 0, usuarioId:0, creadorId:0};
     ref.result.then((dieta: Dieta) => {
       this.dietaService.crearDieta(dieta, dieta.usuarioId);
       this.ngOnInit();
