@@ -74,6 +74,11 @@ export class UsuariosService {
     const usuario = localStorage.getItem('usuario');
     return usuario ? JSON.parse(usuario) : undefined;
   }
+  //*
+  getUsuarioSesionObservable(): Observable<UsuarioSesion | undefined> {
+    const usuario = localStorage.getItem('usuario');
+    return of(usuario ? JSON.parse(usuario) : undefined);
+  }
 
   doLogout() {
     localStorage.removeItem('usuario');

@@ -18,7 +18,8 @@ const dietasC: Dieta [] = [
     alimentos: ['arroz', 'pollo'],
     recomendaciones: 'comer',
     id: 1,
-    usuarioId: 2
+    usuarioId: 2,
+    creadorId: 1
   },
   {
     nombre: 'tarde',
@@ -29,7 +30,20 @@ const dietasC: Dieta [] = [
     alimentos: ['salchicha', 'pollo'],
     recomendaciones: 'comer',
     id: 1,
-    usuarioId: 1
+    usuarioId: 1,
+    creadorId: 1
+  },
+  {
+    nombre: 'tarde2',
+    descripcion: 'afafaf',
+    observaciones: 'añfgnjafja',
+    objetivo: 'fjafaf',
+    duracionDias: 2,
+    alimentos: ['salchicha', 'pollo'],
+    recomendaciones: 'comer',
+    id: 1,
+    usuarioId: 1,
+    creadorId: 4
   },
 ]
 const usuariosC: Usuario [] = [
@@ -63,6 +77,16 @@ const usuariosC: Usuario [] = [
     password: 'pepe',
     dietas:[]
   },
+  {
+    id: 4,
+    nombre: 'pruebasAdmin',
+    apellido1: 'Admin',
+    apellido2: 'Admin',
+    email: 'adminpr@uma.es',
+    administrador: true,
+    password: 'adminpr',
+    dietas: []
+  }
 ];
 
 @Injectable({
@@ -96,7 +120,17 @@ export class BackendFakeService {
   getDietas(): Observable<Dieta[]> {
     return of(this.dietas);
   }
-
+  //*
+  getDietasPorUsuario(usuarioId: number): Observable<Dieta[]> {
+    
+    const dietasUsuario = this.dietas.filter(dieta => dieta.usuarioId === usuarioId);
+    return of(dietasUsuario);
+  }
+  //*
+  getDietasPorCreador(usuarioId: number): Observable<Dieta[]> {
+    const dietasCreador = this.dietas.filter(dieta => dieta.creadorId === usuarioId);
+    return of(dietasCreador);
+  }
   
   crearDieta(dieta: Dieta, usuarioId: number): Observable<Dieta> {
     const usuario = this.usuarios.find(u => u.id == usuarioId);

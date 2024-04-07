@@ -18,15 +18,31 @@ import { Dieta } from '../entities/dieta';
 export class DietaEntrenadorComponent {
   dietas: Dieta [] = [];
   dietaElegida?: Dieta;
-  constructor(private dietaService: DietaService, private modalService: NgbModal){
+  constructor(private dietaService: DietaService, private usuarioService: UsuariosService, private modalService: NgbModal){
       this.ngOnInit();
-    }
+  }
 
-  ngOnInit(): void {
+  /*
+   ngOnInit(): void {
     this.dietaService.getDietas().subscribe(dietas => {
       this.dietas = dietas;
     });
   }
+  */
+
+  ngOnInit(): void {
+    this.usuarioService.getUsuarioSesionObservable().subscribe(usuarioSesion => {
+      if (usuarioSesion) {
+        const usuarioId = usuarioSesion.id;
+        this.dietaService.getDietasPorCreador(usuarioId).subscribe(dietas => {
+          this.dietas = dietas;
+        });
+      } else {
+        console.error('No se ha encontrado un usuario autenticado.');
+      }
+    });
+  }
+  
 
 
   elegirDieta(dieta: Dieta): void {

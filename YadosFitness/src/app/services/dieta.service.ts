@@ -17,4 +17,11 @@ export class DietaService {
   crearDieta(dieta: Dieta, usuarioId: number): Observable<Dieta> {
     return this.backend.crearDieta(dieta, usuarioId);
   }
+
+  getDietasPorUsuario(usuarioId: number): Observable<Dieta[]> {
+    return this.backend.getDietasPorUsuario(usuarioId);
+  }
+  getDietasPorCreador(usuarioId: number): Observable<Dieta[]> {
+    return this.backend.getDietasPorCreador(usuarioId);
+  }
 }
