@@ -28,7 +28,9 @@ export class DietaUsuarioComponent {
       if (usuarioSesion) {
         const usuarioId = usuarioSesion.id;
         this.dietaService.getDietasPorUsuario(usuarioId).subscribe(dietas => {
-          this.dietas = usuarioSesion.dietas;
+          //this.dietas = usuarioSesion.dietas;
+          this.dietas = dietas.concat(usuarioSesion.dietas);
+           
         });
       } else {
         console.error('No se ha encontrado un usuario autenticado.');
