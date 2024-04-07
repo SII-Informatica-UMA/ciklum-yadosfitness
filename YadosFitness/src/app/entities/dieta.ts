@@ -8,5 +8,5 @@ export interface Dieta{
   recomendaciones: string,
   id: number;
   usuarioId: number;
-  creadorId: number  ;//*
+  creadorId: number | undefined ;//*
 }

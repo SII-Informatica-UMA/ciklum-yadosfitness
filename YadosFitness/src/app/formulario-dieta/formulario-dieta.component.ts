@@ -14,7 +14,7 @@ export class FormularioDietaComponent {
   constructor(public modal: NgbActiveModal, private ususarioService: UsuariosService) {}
   accion?: "Añadir" | "Editar";
   dieta : Dieta = { nombre: '', descripcion: '', observaciones:'', objetivo:'', duracionDias: 0, 
-    alimentos: [], recomendaciones:'', id: 0, usuarioId:0, creadorId:4 }
+    alimentos: [], recomendaciones:'', id: 0, usuarioId:0, creadorId:this.ususarioService.getUsuarioSesion()?.id }
   guardarDieta(): void {
     this.modal.close(this.dieta);
   }
