@@ -126,7 +126,41 @@ export class BackendFakeService {
       });
     }
     this.dietas.splice(i, 1);
+  
+    let usuario = this.usuarios.find(u => u.id == usuarioId);
+    if (usuario) {
+      let indexDietaUsuario = usuario.dietas.findIndex(d => d.id == dieta.id);
+      if (indexDietaUsuario !== -1) {
+        usuario.dietas.splice(indexDietaUsuario, 1);
+      }
+    }
+    this.guardarUsuariosEnLocalStorage();
     this.guardarDietasEnLocalStorage();
+    return of(dieta);
+  }
+
+  editarDieta(dieta: Dieta, usuarioId: number): Observable<Dieta> {
+    let i = this.dietas.findIndex(d => d.id == dieta.id);
+    if (i < 0) {
+      return new Observable<Dieta>(observer => {
+        observer.error('Dieta no encontrada');
+      });
+    }
+    this.dietas[i] = dieta;
+  
+    // Encuentra el usuario
+    let usuario = this.usuarios.find(u => u.id == usuarioId);
+    if (usuario) {
+      // Encuentra la dieta en la lista de dietas del usuario
+      let indexDietaUsuario = usuario.dietas.findIndex(d => d.id == dieta.id);
+      if (indexDietaUsuario !== -1) {
+        // Actualiza la dieta en la lista de dietas del usuario
+        usuario.dietas[indexDietaUsuario] = dieta;
+      }
+    }
+  
+    this.guardarDietasEnLocalStorage();
+    this.guardarUsuariosEnLocalStorage();
     return of(dieta);
   }
   getDietas(): Observable<Dieta[]> {
@@ -159,7 +193,6 @@ export class BackendFakeService {
     this.dietas.push(dieta); // Agregar la nueva dieta al arreglo de dietas
     usuario.dietas.push(dieta);
     this.guardarDietasEnLocalStorage(); // Guardar las dietas en el almacenamiento local
-
     return of(dieta); // Devolver la nueva dieta creada
   }
   private guardarDietasEnLocalStorage(): void {

@@ -66,4 +66,9 @@ export class DietaEntrenadorComponent {
     this.ngOnInit();
     this.dietaElegida = undefined;
   }
+  editarDieta(dieta: Dieta): void {
+    this.dietaService.editarDieta(dieta, dieta.usuarioId);
+    this.ngOnInit();
+    this.dietaElegida = undefined;
+  }
 }

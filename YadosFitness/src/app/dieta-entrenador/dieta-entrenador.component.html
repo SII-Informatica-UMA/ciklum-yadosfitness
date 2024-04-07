@@ -13,7 +13,8 @@
       </div>
       <div class="col-md-6" *ngIf="dietaElegida">
         <app-detalle-dieta [dieta]="dietaElegida"
-            (dietaEliminado)="eliminarDieta(dietaElegida)"
+            (dietaEliminado)="eliminarDieta($event)"
+            (dietaEditado)="editarDieta($event)"
         ></app-detalle-dieta>
       </div>
     </div>

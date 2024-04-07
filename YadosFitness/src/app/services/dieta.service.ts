@@ -17,6 +17,10 @@ export class DietaService {
     return this.backend.eliminarDieta(dieta, usuarioId);
   }
 
+  editarDieta(dieta: Dieta, usuarioId: number): Observable<Dieta> {
+    return this.backend.editarDieta(dieta, usuarioId);
+  }
+
   crearDieta(dieta: Dieta, usuarioId: number): Observable<Dieta> {
     return this.backend.crearDieta(dieta, usuarioId);
   }
