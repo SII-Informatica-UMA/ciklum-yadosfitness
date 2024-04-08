@@ -54,18 +54,28 @@ export class AppComponent {
   get usuarioSesion() {
     return this.usuarioService.getUsuarioSesion();
   }
+
   mostrarLogin() {
-  this.mostrarVentana = true;
-}
+    this.mostrarVentana = true;
+  }
+
   logout() {
     this.usuarioService.doLogout();
     this.actualizarRol();
     this.router.navigateByUrl('/login');
   }
 
-  isAdmin() : boolean {
-    return this.usuarioService._rolCentro?.rol == Rol.ADMINISTRADOR;
+  isAdmin(): boolean {
+    return this.usuarioService._rolCentro?.rol === Rol.ADMINISTRADOR;
   }
+
+  isEntrenador(): boolean {
+    const usuario = this.usuarioService.getUsuarioSesion();
+    if (usuario) {
+        return usuario.roles.some(rol => rol.rol === Rol.ENTRENADOR);
+    }
+    return false;
+}
 
 }
 
