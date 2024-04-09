@@ -11,10 +11,10 @@ import { UsuariosService } from '../services/usuarios.service';
   styleUrl: './formulario-dieta.component.css'
 })
 export class FormularioDietaComponent {
-  constructor(public modal: NgbActiveModal, private ususarioService: UsuariosService) {}
+  constructor(public modal: NgbActiveModal, private usuarioService: UsuariosService) {}
   accion?: "Añadir" | "Editar";
   dieta : Dieta = { nombre: '', descripcion: '', observaciones:'', objetivo:'', duracionDias: 0, 
-    alimentos: [], recomendaciones:'', id: 0, usuarioId:0, creadorId:this.ususarioService.getUsuarioSesion()?.id }
+    alimentos: [], recomendaciones:'', id: 0, usuarioId:0, creadorId:this.usuarioService.getUsuarioSesion()?.id }
   guardarDieta(): void {
     this.modal.close(this.dieta);
   }

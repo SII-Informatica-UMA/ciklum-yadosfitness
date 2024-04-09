@@ -18,8 +18,8 @@ const dietasC: Dieta [] = [
     alimentos: ['arroz', 'pollo'],
     recomendaciones: 'comer',
     id: 1,
-    usuarioId: 2,
-    creadorId: 1
+    usuarioId: 4,
+    creadorId: 2
   },
   {
     nombre: 'tarde',
@@ -30,8 +30,8 @@ const dietasC: Dieta [] = [
     alimentos: ['salchicha', 'pollo'],
     recomendaciones: 'comer',
     id: 1,
-    usuarioId: 1,
-    creadorId: 1
+    usuarioId: 4,
+    creadorId: 2
   },
   {
     nombre: 'tarde2',
@@ -42,8 +42,8 @@ const dietasC: Dieta [] = [
     alimentos: ['salchicha', 'pollo'],
     recomendaciones: 'comer',
     id: 1,
-    usuarioId: 1,
-    creadorId: 4
+    usuarioId: 5,
+    creadorId: 2
   },
 ]
 const usuariosC: Usuario [] = [
@@ -69,8 +69,8 @@ const usuariosC: Usuario [] = [
   },
   {
     id: 3,
-    nombre: 'pepe',
-    apellido1: 'García',
+    nombre: 'Pepe',
+    apellido1: 'Alonso',
     apellido2: 'Ramos',
     email: 'pepe@uma.es',
     administrador: false,
@@ -79,12 +79,22 @@ const usuariosC: Usuario [] = [
   },
   {
     id: 4,
-    nombre: 'pruebasAdmin',
-    apellido1: 'Admin',
-    apellido2: 'Admin',
-    email: 'adminpr@uma.es',
-    administrador: true,
-    password: 'adminpr',
+    nombre: 'Alvaro',
+    apellido1: 'Luque',
+    apellido2: 'Torres',
+    email: 'alvaro@uma.es',
+    administrador: false,
+    password: '1234',
+    dietas: []
+  },
+  {
+    id: 5,
+    nombre: 'Jorge',
+    apellido1: 'Castillo',
+    apellido2: 'Podadera',
+    email: 'jorge@uma.es',
+    administrador: false,
+    password: '1234',
     dietas: []
   }
 ];

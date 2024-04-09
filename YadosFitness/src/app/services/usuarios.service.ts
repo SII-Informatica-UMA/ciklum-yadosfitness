@@ -54,10 +54,10 @@ export class UsuariosService {
   
   private completarConRoles(usuarioSesion: UsuarioSesion): Observable<UsuarioSesion> {
     
-    if (usuarioSesion.id === 1 || usuarioSesion.id === 4) {
+    if (usuarioSesion.id === 2 || usuarioSesion.id === 3) {
 
       usuarioSesion.roles.push({ rol: Rol.ENTRENADOR });
-    } else if (usuarioSesion.id === 2 || usuarioSesion.id === 3) {
+    } else if (usuarioSesion.id === 4 || usuarioSesion.id === 5) {
       
       usuarioSesion.roles.push({ rol: Rol.CLIENTE });
     }

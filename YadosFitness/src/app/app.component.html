@@ -10,11 +10,7 @@
         <button ngbNavLink (click)="active = 2">Dietas</button>
       </li>
       <li [ngbNavItem]="3">
-        <button ngbNavLink (click)="active = 3">Recetas</button>
-          
-      </li>
-      <li [ngbNavItem]="4">
-        <button ngbNavLink (click)="active = 4">Administración</button>
+        <button ngbNavLink (click)="active = 3">Administración</button>
       </li>
       <li [ngbNavItem]="5">
         <div ngbDropdown class="d-inline-block">
@@ -46,8 +42,7 @@
   <ng-container *ngIf="(active === 2 && !usuarioSesion)"><app-dietas></app-dietas></ng-container>
   <ng-container *ngIf="(active === 2 && usuarioSesion && !isEntrenador())"><app-dieta-usuario></app-dieta-usuario></ng-container>
   <ng-container *ngIf="(active === 2 && usuarioSesion && isEntrenador())"><app-dieta-entrenador></app-dieta-entrenador></ng-container>
-  <ng-container *ngIf="active === 3">Contenido de Recetas</ng-container>
-  <ng-container *ngIf="active === 4"><app-listado-usuario></app-listado-usuario></ng-container>
+  <ng-container *ngIf="active === 3"><app-listado-usuario></app-listado-usuario></ng-container>
   </div>
   <div class="footer-basic ">
     <footer>

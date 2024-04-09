@@ -30,7 +30,6 @@ export class DietaEntrenadorComponent {
     });
   }
   */
-
   ngOnInit(): void {
     this.usuarioService.getUsuarioSesionObservable().subscribe(usuarioSesion => {
       if (usuarioSesion) {
