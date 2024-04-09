@@ -18,8 +18,11 @@
         <input class="form-control" id="alimentos" [(ngModel)]="dieta.alimentos" placeholder="arroz, pollo">
         <label for="nombre">Recomendaciones</label>
         <input class="form-control" id="recomendaciones" [(ngModel)]="dieta.recomendaciones" placeholder="recomendaciones">
-        <label for="nombre">Id usuario:</label>
-        <input class="form-control" id="usuarioId" [(ngModel)]="dieta.usuarioId" placeholder="id">
+        <label for="usuarioId">Id usuario:</label>
+        <select class="form-control" id="usuarioId" [(ngModel)]="dieta.usuarioId">
+        <option *ngFor="let usuario of usuariosConRolCliente" [value]="usuario.id">{{ usuario.nombre }}</option>
+        </select>
+
     </div>
   </div>
   <div class="modal-footer">

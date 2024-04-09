@@ -3,8 +3,7 @@ import { Usuario, UsuarioImpl } from '../entities/usuario';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { BackendFakeService } from '../services/backend.fake.service';
-import { Dieta } from '../entities/dieta';
+
 
 @Component({
   selector: 'app-formulario-usuario',
@@ -16,28 +15,12 @@ import { Dieta } from '../entities/dieta';
 export class FormularioUsuarioComponent {
   accion?: "Añadir" | "Editar";
   _usuario: Usuario = new UsuarioImpl();
-  usuarios: Usuario[] = [];
-  dietas: Dieta[] = [];
-  usuarioSeleccionadoId: number=0;
   rpassword: string = '';
   error: string = '';
 
-  constructor(public modal: NgbActiveModal, private backendService: BackendFakeService) { }
+  constructor(public modal: NgbActiveModal) { }
 
-  ngOnInit(): void {
-    // Suscribirse al Observable para obtener usuarios
-    this.backendService.getUsuarios().subscribe(usuarios => {
-      this.usuarios = usuarios;
-    });
 
-    // Suscribirse al Observable para obtener dietas
-    this.backendService.getDietas().subscribe(dietas => {
-      this.dietas = dietas;
-    });
-  }
-  seleccionarUsuario(usuarioId: number): void {
-    this.usuarioSeleccionadoId = usuarioId;
-  }
 
   get usuario () {
     return this._usuario;
