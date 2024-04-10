@@ -22,14 +22,7 @@ export class DietaEntrenadorComponent {
   constructor(private dietaService: DietaService, private usuarioService: UsuariosService, private modalService: NgbModal){
       this.ngOnInit();
   }
-
-  /*
-   ngOnInit(): void {
-    this.dietaService.getDietas().subscribe(dietas => {
-      this.dietas = dietas;
-    });
-  }
-  */
+  
   ngOnInit(): void {
     this.usuarioService.getUsuarioSesionObservable().subscribe(usuarioSesion => {
       if (usuarioSesion) {

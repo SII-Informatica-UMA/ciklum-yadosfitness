@@ -21,10 +21,6 @@ export class FormularioDietaComponent {
     this.usuarioService.getUsuariosConRolCliente().subscribe(
       usuarios => {
         this.usuariosConRolCliente = usuarios;
-        console.log('Usuarios con rol cliente:', this.usuariosConRolCliente); // Comprueba los usuarios obtenidos en la consola
-      },
-      error => {
-        console.error('Error al obtener usuarios con rol cliente:', error); // Manejo de errores
       }
     );
   }

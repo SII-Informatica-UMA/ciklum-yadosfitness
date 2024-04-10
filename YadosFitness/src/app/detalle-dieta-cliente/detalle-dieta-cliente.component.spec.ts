@@ -17,7 +17,42 @@ describe('DetalleDietaClienteComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('debe mostrar el atributo "Descripcion" debajo de nombre', () => {
+    component.dieta = {
+      nombre: 'Mantenimiento',
+      descripcion: 'Mantener peso y masa muscular',
+      observaciones: 'Llevar una dieta equilibrada',
+      objetivo: 'Mantener forma fisica',
+      duracionDias: 180,
+      alimentos: ['Ternera', 'Patata', 'Verduras'],
+      recomendaciones: 'Ser constante',
+      id: 1,
+      usuarioId: 5,
+      creadorId: 2
+    };
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('#nombre + div')).not.toBeNull();
+    expect(compiled.querySelector('#nombre + div label')?.textContent).toContain('Descripción');
   });
+
+  it('debe mostrar el duariacionDias para las dietas (probando con 180)', () => {
+    component.dieta = {
+      nombre: 'Mantenimiento',
+      descripcion: 'Mantener peso y masa muscular',
+      observaciones: 'Llevar una dieta equilibrada',
+      objetivo: 'Mantener forma fisica',
+      duracionDias: 180,
+      alimentos: ['Ternera', 'Patata', 'Verduras'],
+      recomendaciones: 'Ser constante',
+      id: 1,
+      usuarioId: 5,
+      creadorId: 2
+    };
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('#objetivo + div')).not.toBeNull();
+    expect(compiled.querySelector('#objetivo + div span')?.textContent).toContain(180);
+  });
+
 });
