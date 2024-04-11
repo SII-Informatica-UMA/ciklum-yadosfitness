@@ -29,7 +29,7 @@ const dietasC: Dieta [] = [
     duracionDias: 90,
     alimentos: ['Macarrones', 'Atun', 'Tomate frito', 'Huevo'],
     recomendaciones: 'Beber suficiente agua',
-    id: 1,
+    id: 2,
     usuarioId: 4,
     creadorId: 2
   },
@@ -41,7 +41,7 @@ const dietasC: Dieta [] = [
     duracionDias: 180,
     alimentos: ['Ternera', 'Patata', 'Verduras'],
     recomendaciones: 'Ser constante',
-    id: 1,
+    id: 3,
     usuarioId: 5,
     creadorId: 2
   },
@@ -157,27 +157,20 @@ export class BackendFakeService {
       });
     }
     this.dietas[i] = dieta;
-  
     
-    let usuario = this.usuarios.find(u => u.id == usuarioId);
-    if (usuario) {
-      let indexDietaUsuario = usuario.dietas.findIndex(d => d.id == dieta.id);
-      if (indexDietaUsuario !== -1) {
-        usuario.dietas[indexDietaUsuario] = dieta;
-      }
-    }
   
     this.guardarDietasEnLocalStorage();
-    this.guardarUsuariosEnLocalStorage();
+    
     return of(dieta);
   }
+  
   getDietas(): Observable<Dieta[]> {
     return of(this.dietas);
   }
   
   getDietasPorUsuario(usuarioId: number): Observable<Dieta[]> {
     
-    const dietasUsuario = this.dietas.filter(dieta => dieta.usuarioId === usuarioId);
+    const dietasUsuario = this.dietas.filter(dieta => dieta.usuarioId == usuarioId);
     return of(dietasUsuario);
   }
   
