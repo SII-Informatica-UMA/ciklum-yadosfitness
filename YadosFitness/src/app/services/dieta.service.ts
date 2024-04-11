@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Dieta } from '../entities/dieta';
-import { UsuarioSesion } from '../entities/login';
 import { BackendFakeService } from "./backend.fake.service";
 import { Observable } from 'rxjs';
 @Injectable({

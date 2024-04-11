@@ -3,10 +3,7 @@ import { UsuariosService } from '../services/usuarios.service';
 import { DietaService } from '../services/dieta.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
-import { Usuario, UsuarioImpl } from '../entities/usuario';
-import { Rol } from '../entities/login';
 import { FormularioDietaComponent } from '../formulario-dieta/formulario-dieta.component';
-import { FormularioUsuarioComponent } from '../formulario-usuario/formulario-usuario.component';
 import { Dieta } from '../entities/dieta';
 import { DetalleDietaComponent } from '../detalle-dieta/detalle-dieta.component';
 @Component({
@@ -35,8 +32,6 @@ export class DietaEntrenadorComponent {
       }
     });
   }
-  
-
 
   elegirDieta(dieta: Dieta): void {
     this.dietaElegida = dieta;

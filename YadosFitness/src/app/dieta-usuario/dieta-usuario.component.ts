@@ -3,10 +3,6 @@ import { UsuariosService } from '../services/usuarios.service';
 import { DietaService } from '../services/dieta.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
-import { Usuario, UsuarioImpl } from '../entities/usuario';
-import { Rol } from '../entities/login';
-import { FormularioDietaComponent } from '../formulario-dieta/formulario-dieta.component';
-import { FormularioUsuarioComponent } from '../formulario-usuario/formulario-usuario.component';
 import { Dieta } from '../entities/dieta';
 import { DetalleDietaClienteComponent } from '../detalle-dieta-cliente/detalle-dieta-cliente.component';
 @Component({
@@ -28,7 +24,6 @@ export class DietaUsuarioComponent {
       if (usuarioSesion) {
         const usuarioId = usuarioSesion.id;
         this.dietaService.getDietasPorUsuario(usuarioId).subscribe(dietas => {
-          //this.dietas = usuarioSesion.dietas;
           this.dietas = dietas.concat(usuarioSesion.dietas);
            
         });

@@ -91,8 +91,6 @@ export class UsuariosService {
   
     return of(usuariosCliente);
   }
-  
-  
 
   private getUsuarioIdFromJwt(jwt: string): number {
     let payload = jose.decodeJwt(jwt);

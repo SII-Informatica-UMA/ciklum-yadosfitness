@@ -158,13 +158,11 @@ export class BackendFakeService {
     }
     this.dietas[i] = dieta;
   
-    // Encuentra el usuario
+    
     let usuario = this.usuarios.find(u => u.id == usuarioId);
     if (usuario) {
-      // Encuentra la dieta en la lista de dietas del usuario
       let indexDietaUsuario = usuario.dietas.findIndex(d => d.id == dieta.id);
       if (indexDietaUsuario !== -1) {
-        // Actualiza la dieta en la lista de dietas del usuario
         usuario.dietas[indexDietaUsuario] = dieta;
       }
     }
@@ -176,13 +174,13 @@ export class BackendFakeService {
   getDietas(): Observable<Dieta[]> {
     return of(this.dietas);
   }
-  //*
+  
   getDietasPorUsuario(usuarioId: number): Observable<Dieta[]> {
     
     const dietasUsuario = this.dietas.filter(dieta => dieta.usuarioId === usuarioId);
     return of(dietasUsuario);
   }
-  //*
+  
   getDietasPorCreador(usuarioId: number): Observable<Dieta[]> {
     const dietasCreador = this.dietas.filter(dieta => dieta.creadorId === usuarioId);
     return of(dietasCreador);
@@ -197,13 +195,13 @@ export class BackendFakeService {
       });
     }
 
-    dieta.id = this.dietas.length + 1; // Asignar un ID único a la nueva dieta
-    dieta.usuarioId = usuarioId; // Asignar el ID del usuario a la dieta
+    dieta.id = this.dietas.length + 1; 
+    dieta.usuarioId = usuarioId; 
 
-    this.dietas.push(dieta); // Agregar la nueva dieta al arreglo de dietas
+    this.dietas.push(dieta); 
     usuario.dietas.push(dieta);
-    this.guardarDietasEnLocalStorage(); // Guardar las dietas en el almacenamiento local
-    return of(dieta); // Devolver la nueva dieta creada
+    this.guardarDietasEnLocalStorage(); 
+    return of(dieta); 
   }
   private guardarDietasEnLocalStorage(): void {
     localStorage.setItem('dietas', JSON.stringify(this.dietas));
@@ -224,7 +222,7 @@ export class BackendFakeService {
         observer.error('El usuario ya existe');
       });
     }
-    // Si no trae contraseña generamos una aleatoria
+    
     if (usuario.password.length == 0) {
       usuario.password = this.generarCadena();
     }
@@ -250,7 +248,7 @@ export class BackendFakeService {
         observer.error('El usuario no existe');
       });
     }
-    // Si la contraseña está en blanco mantenemos la que ya tiene
+    
     if (usuario.password.length == 0) {
       usuario.password = u.password;
     }

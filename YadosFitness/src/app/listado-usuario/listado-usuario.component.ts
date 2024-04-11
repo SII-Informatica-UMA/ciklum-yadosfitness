@@ -1,4 +1,3 @@
-import { UsuarioSesion } from './../entities/login';
 import { Component } from '@angular/core';
 import { UsuariosService } from '../services/usuarios.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';

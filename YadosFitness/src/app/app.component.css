@@ -44,7 +44,7 @@ body{
 
 .btn-secondary dropdown-toggle {
     border-color: black;
-    padding: 3px 18px; /* Aumenta el relleno si el botón es demasiado pequeño */
+    padding: 3px 18px; 
 }
 
 #dropdownBasic1{
@@ -57,7 +57,7 @@ svg{
     margin-bottom: 3px;
 }
 
-/* Estilos para el footer */
+
 .footer-basic {
     padding: 40px 0;
     background-color: #f2f2f2; 
@@ -66,7 +66,7 @@ svg{
 
 
 .contenido {
-    min-height: calc(90vh - 160px); /* Altura mínima de la ventana menos la altura del footer */
+    min-height: calc(90vh - 160px); 
 }
 
 .footer-basic ul {
@@ -78,9 +78,8 @@ svg{
 }
 
 .footer-basic ul a {
-    color: #666; /* Color de enlace gris */
+    color: #666; 
     text-decoration: none;
-    
 }
 
 .footer-basic .social {
@@ -95,14 +94,14 @@ svg{
     border-radius: 50%;
     border: 1px solid #ccc;
     margin: 0 8px;
-    color: #666; /* Color de icono gris */
+    color: #666;
 
 }
 
 .footer-basic .copyright {
     margin-top: 15px;
     font-size: 13px;
-    color: #999; /* Color de texto gris claro */
+    color: #999; 
     
 }
 
@@ -115,11 +114,6 @@ svg{
 .log button:hover{
     background-color: rgb(41, 40, 40);
     color: white;
-}
-
-.log button{
-    font-size: 15px;
-    text-align: center;
 }
 
 .login-overlay {
@@ -135,14 +129,29 @@ svg{
     align-items: center;
 }
 app-login {
-    width: 2000px; /* Ajusta este valor según sea necesario */
-    max-width: 100%; /* Ancho máximo del 80% */
-    padding: 40px; /* Añade más relleno alrededor del contenido */
+    width: 2000px; 
+    max-width: 100%; 
+    padding: 40px; 
     
-    border-radius: 5px; /* Bordes redondeados para la caja de login */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra alrededor de la caja de login */
+    border-radius: 5px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
 }
 
 #principal.dimed{
     background-color: rgba(0, 0, 0, 0.5);
+}
+
+.log a{
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
+
+.log button{
+    font-size: 15px;
+    width: 100%;
+    text-align: center;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
 }

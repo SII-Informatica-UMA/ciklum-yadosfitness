@@ -5,7 +5,7 @@
   background-position: center;
   background-repeat: no-repeat;
   
-  object-fit: cover; /* Cubrirá completamente el contenedor, recortando la imagen si es necesario */
+  object-fit: cover;  
 }
 .container-fluid {
   padding-right: 0;
@@ -24,12 +24,12 @@ h2{
 }
 
 p {
-  font-size: 18px; /* Cambia el tamaño de la fuente */
-  color: #333; /* Cambia el color del texto */
-  text-align: center; /* Alinea el texto a ambos márgenes */
+  font-size: 18px;  
+  color: #333;  
+  text-align: center; 
   margin-top: 20px;
   margin: 20px auto;
-  max-width: 500px; /* Limita el ancho del párrafo */
+  max-width: 500px;  
   line-height: 1.8;
 }
 
