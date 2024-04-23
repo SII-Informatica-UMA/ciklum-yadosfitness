@@ -1,6 +1,7 @@
 package YadosFitness.entidad.entities;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -116,4 +117,29 @@ public class Dieta {
         this.creadorId = creadorId;
     }
     
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Dieta other = (Dieta) obj;
+        return Objects.equals(id, other.id);
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(nombre, descripcion, observaciones, objetivo, 
+                duracionDias, alimentos, recomendaciones, id, usuarioId , creadorId);
+    }
+
+    @Override
+    public String toString(){
+        return "La dieta es: "+nombre+ ", descripcion: "+descripcion+", observaciones: "+observaciones
+            + ", objetivo: "+objetivo+ ", duracion: "+duracionDias+ "alimentos: "+alimentos.toString()
+            +", recomendaciones:"+recomendaciones+", id: "+id+", usuarioId: "+usuarioId+", creadorId: "+creadorId;
+    }
+
 }
