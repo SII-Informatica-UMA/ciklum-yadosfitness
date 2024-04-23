@@ -2,6 +2,12 @@ package YadosFitness.entidad.entities;
 
 import java.util.ArrayList;
 
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
+@Entity
 public class Dieta {
     
     private String nombre;
@@ -9,8 +15,11 @@ public class Dieta {
     private String observaciones;
     private String objetivo;
     private int duracionDias;
+    @ElementCollection
     private ArrayList<String> alimentos;
     private String recomendaciones;
+    @Id
+    @GeneratedValue
     private int id;
     private int usuarioId;
     private int creadorId;
