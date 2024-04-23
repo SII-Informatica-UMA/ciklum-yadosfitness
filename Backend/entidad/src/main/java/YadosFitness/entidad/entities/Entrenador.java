@@ -7,10 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-
-
 @Entity
-public class Cliente {
+public class Entrenador {
     @Id
     @GeneratedValue
     private int id;
@@ -19,9 +17,10 @@ public class Cliente {
     private String apellido2;
     private String email;
     private String password;
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "entrenador", cascade = CascadeType.ALL)
     private List<Dieta> dietas;
 
+    
 
     public int getId() {
         return id;
@@ -70,7 +69,7 @@ public class Cliente {
     @Override
     public int hashCode(){
         return Objects.hash(id, nombre, apellido1, apellido2, email, password, dietas);
-    }
+    }   
 
     @Override
     public boolean equals(Object obj) {
@@ -80,7 +79,7 @@ public class Cliente {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Cliente other = (Cliente) obj;
+        Entrenador other = (Entrenador) obj;
         return Objects.equals(id, other.id);
     }
 

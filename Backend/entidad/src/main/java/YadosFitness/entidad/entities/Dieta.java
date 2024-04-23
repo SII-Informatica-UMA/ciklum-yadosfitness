@@ -7,6 +7,8 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Dieta {
@@ -22,22 +24,13 @@ public class Dieta {
     @Id
     @GeneratedValue
     private int id;
-    private int usuarioId;
-    private int creadorId;
-
-    //Constructor
-    public Dieta(String nombre, String descripcion, String observaciones, String objetivo, int durDias, ArrayList<String> alimentos, String recomendaciones, int id, int usuarioId, int creadorId) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.observaciones = observaciones;
-        this.objetivo = objetivo;
-        this.duracionDias = durDias;
-        this.alimentos = alimentos;
-        this.recomendaciones = recomendaciones;
-        this.id = id;
-        this.usuarioId = usuarioId;
-        this.creadorId = creadorId;     
-    }
+    @ManyToOne
+    @JoinColumn(name = "entrenadorID", nullable = false)
+    private Entrenador entrenador;
+    @ManyToOne
+    @JoinColumn(name = "clienteID", nullable = false)
+    private Cliente cliente;
+    
 
     //Getters
     public String getNombre(){
@@ -72,14 +65,21 @@ public class Dieta {
         return id;
     }
 
-    public int getUsuarioId() {
-        return usuarioId;
+    public Entrenador getEntrenador() {
+        return entrenador;
     }
 
-    public int getCreadorId() {
-        return creadorId;
+    public void setEntrenador(Entrenador entrenador) {
+        this.entrenador = entrenador;
     }
 
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
     //Setters
     public void setNombre(String nombre) {
         this.nombre = nombre;
@@ -108,14 +108,6 @@ public class Dieta {
     public void setRecomendaciones(String recomendaciones) {
         this.recomendaciones = recomendaciones;
     }
-
-    public void setUsuarioId(int usuarioId) {
-        this.usuarioId = usuarioId;
-    }
-
-    public void setCreadorId(int creadorId) {
-        this.creadorId = creadorId;
-    }
     
     @Override
     public boolean equals(Object obj) {
@@ -132,14 +124,14 @@ public class Dieta {
     @Override
     public int hashCode(){
         return Objects.hash(nombre, descripcion, observaciones, objetivo, 
-                duracionDias, alimentos, recomendaciones, id, usuarioId , creadorId);
+                duracionDias, alimentos, recomendaciones, id, entrenador , cliente);
     }
 
     @Override
     public String toString(){
         return "La dieta es: "+nombre+ ", descripcion: "+descripcion+", observaciones: "+observaciones
             + ", objetivo: "+objetivo+ ", duracion: "+duracionDias+ "alimentos: "+alimentos.toString()
-            +", recomendaciones:"+recomendaciones+", id: "+id+", usuarioId: "+usuarioId+", creadorId: "+creadorId;
+            +", recomendaciones:"+recomendaciones+", id: "+id+", cliente: "+cliente.getNombre()+", entrenador: "+entrenador.getNombre();
     }
 
 }

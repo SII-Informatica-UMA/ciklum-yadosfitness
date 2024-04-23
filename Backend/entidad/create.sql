@@ -1,4 +1,10 @@
+create sequence cliente_seq start with 1 increment by 50;
 create sequence dieta_seq start with 1 increment by 50;
-create table dieta (creador_id integer not null, duracion_dias integer not null, id integer not null, usuario_id integer not null, descripcion varchar(255), nombre varchar(255), objetivo varchar(255), observaciones varchar(255), recomendaciones varchar(255), primary key (id));
+create sequence entrenador_seq start with 1 increment by 50;
+create table cliente (id integer not null, apellido1 varchar(255), apellido2 varchar(255), email varchar(255), nombre varchar(255), password varchar(255), primary key (id));
+create table dieta (clienteid integer not null, duracion_dias integer not null, entrenadorid integer not null, id integer not null, descripcion varchar(255), nombre varchar(255), objetivo varchar(255), observaciones varchar(255), recomendaciones varchar(255), primary key (id));
 create table dieta_alimentos (dieta_id integer not null, alimentos varchar(255));
+create table entrenador (id integer not null, apellido1 varchar(255), apellido2 varchar(255), email varchar(255), nombre varchar(255), password varchar(255), primary key (id));
+alter table if exists dieta add constraint FKt87lqwqlqgv523d3e6p60it1n foreign key (clienteid) references cliente;
+alter table if exists dieta add constraint FKo1qfi4qqeyha2ts2bpq2elddj foreign key (entrenadorid) references entrenador;
 alter table if exists dieta_alimentos add constraint FKgp9v0i9bk4etmieq7od891n94 foreign key (dieta_id) references dieta;

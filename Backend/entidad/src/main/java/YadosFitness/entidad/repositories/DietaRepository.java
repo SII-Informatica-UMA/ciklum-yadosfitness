@@ -10,7 +10,7 @@ import YadosFitness.entidad.entities.Dieta;
 
 public interface DietaRepository extends JpaRepository<Dieta, Integer> {
     
-    @Query( "Select d from Dieta d where d.usuarioId = :nombre" )
-    List<Dieta> findByIdUsuaraio(@Param("nombre") String nombre);
+    @Query( "Select d from Dieta d where d.cliente.getNombre() = :nombre" )
+    List<Dieta> findByIdUsuarioid(@Param("nombre") String nombre);
 
 }
