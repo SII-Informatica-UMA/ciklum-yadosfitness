@@ -2,17 +2,19 @@ package YadosFitness.entidad.entities;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Dieta {
     
+    @Id
+    @GeneratedValue
+    private Long id;
     private String nombre;
     private String descripcion;
     private String observaciones;
@@ -21,15 +23,9 @@ public class Dieta {
     @ElementCollection
     private ArrayList<String> alimentos;
     private String recomendaciones;
-    @Id
-    @GeneratedValue
-    private int id;
-    @ManyToOne
-    @JoinColumn(name = "entrenadorID", nullable = false)
-    private Entrenador entrenador;
-    @ManyToOne
-    @JoinColumn(name = "clienteID", nullable = false)
-    private Cliente cliente;
+    private Long entrenadorId;
+    @ElementCollection
+    private Set<Long> clienteId;
     
 
     //Getters
@@ -61,24 +57,24 @@ public class Dieta {
         return recomendaciones;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public Entrenador getEntrenador() {
-        return entrenador;
+    public Long getEntrenador() {
+        return entrenadorId;
     }
 
-    public void setEntrenador(Entrenador entrenador) {
-        this.entrenador = entrenador;
+    public void setEntrenador(Long entrenadorId) {
+        this.entrenadorId = entrenadorId;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public Set<Long> getCliente() {
+        return clienteId;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setCliente(Set<Long> clienteId) {
+        this.clienteId = clienteId;
     }
     //Setters
     public void setNombre(String nombre) {
@@ -124,14 +120,14 @@ public class Dieta {
     @Override
     public int hashCode(){
         return Objects.hash(nombre, descripcion, observaciones, objetivo, 
-                duracionDias, alimentos, recomendaciones, id, entrenador , cliente);
+                duracionDias, alimentos, recomendaciones, id, entrenadorId , clienteId);
     }
 
     @Override
     public String toString(){
         return "La dieta es: "+nombre+ ", descripcion: "+descripcion+", observaciones: "+observaciones
             + ", objetivo: "+objetivo+ ", duracion: "+duracionDias+ "alimentos: "+alimentos.toString()
-            +", recomendaciones:"+recomendaciones+", id: "+id+", cliente: "+cliente.getNombre()+", entrenador: "+entrenador.getNombre();
+            +", recomendaciones:"+recomendaciones+", id: "+id+", cliente: "+clienteId.toString()+", entrenador: "+entrenadorId;
     }
 
 }
