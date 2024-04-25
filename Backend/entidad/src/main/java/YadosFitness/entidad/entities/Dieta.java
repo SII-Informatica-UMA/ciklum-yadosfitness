@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,12 +20,15 @@ public class Dieta {
     private String descripcion;
     private String observaciones;
     private String objetivo;
+    @Column(name = "DURACION_DIAS")
     private int duracionDias;
     @ElementCollection
     private ArrayList<String> alimentos;
     private String recomendaciones;
+    @Column(name = "ENTRENADOR_ID", nullable = false)
     private Long entrenadorId;
     @ElementCollection
+    @Column(name = "CLIENTE_ID", nullable = false)
     private Set<Long> clienteId;
     
 
