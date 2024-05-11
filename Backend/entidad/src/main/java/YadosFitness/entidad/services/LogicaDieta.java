@@ -4,9 +4,7 @@ import YadosFitness.entidad.repositories.DietaRepository;
 import YadosFitness.entidad.entities.Dieta;
 import YadosFitness.entidad.exceptions.DietaExistException;
 import YadosFitness.entidad.exceptions.DietaNoExisteException;
-import YadosFitness.entidad.exceptions.DietaVaciaException;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
