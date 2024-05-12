@@ -74,6 +74,7 @@ public class Dieta {
         this.entrenadorId = entrenadorId;
     }
 
+    
     public Set<Long> getCliente() {
         return clienteId;
     }

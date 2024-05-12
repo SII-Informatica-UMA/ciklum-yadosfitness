@@ -25,10 +25,11 @@ public class LogicaDieta {
     }
 
     public List<Dieta> dietasDeCliente(Long idCliente) {
-        Set<Long> ids = new HashSet<>();
+        /*
+         *  Set<Long> ids = new HashSet<>();
         ids.add(idCliente);
-        
-        return repo.findByClienteId(ids);
+         */
+        return repo.findByClienteId(idCliente);
     }
 
     public List<Dieta> dietasDeEntrenador(Long idEntrenador) {
@@ -48,6 +49,7 @@ public class LogicaDieta {
         if(repo.findById(dieta.getId()).isPresent()){
             throw new DietaExistException("Dieta ya existente");
         }
+        
         return repo.save(dieta);
     }
 

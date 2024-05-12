@@ -1,4 +1,4 @@
-package YadosFitness.dtos;
+package YadosFitness.entidad.dtos;
 import java.util.ArrayList;
 
 

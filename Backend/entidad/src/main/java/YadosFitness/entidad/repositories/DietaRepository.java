@@ -17,8 +17,9 @@ public interface DietaRepository extends JpaRepository<Dieta, Long> {
     void updateDieta(@Param("nombre") String nombre, @Param("descripcion") String descripcion, @Param("observaciones") String observaciones, @Param("objetivo") String objetivo, @Param("duracionDias") int duracionDias, @Param("alimentos") ArrayList<String> alimentos, @Param("recomendaciones") String recomendaciones, @Param("entrenadorId") Long entrenadorId, @Param("clienteId") Set<Long> clienteId,@Param("id") Long id);
     @Query("UPDATE Dieta SET clienteId = :clienteId WHERE id = :id AND entrenadorId = :entrenadorId")
     void updateCliente(@Param("entrenadorId") Long entrenadorId, @Param("clienteId") Set<Long> clienteId,@Param("id") Long id);
-    
-    List<Dieta> findByClienteId(Set<Long> clienteId);
+    @Query("SELECT d FROM Dieta d WHERE :idCliente MEMBER OF d.clienteId")
+    List<Dieta> findByClienteId(Long idCliente);
+    //List<Dieta> findByClienteId(Set<Long> clienteId);
     List<Dieta> findByEntrenadorId(Long entrenadorid);
     List<Dieta> findByNombre(String nombre);
     

@@ -1,6 +1,6 @@
 package YadosFitness.entidad.controllers;
 
-import YadosFitness.dtos.*;
+import YadosFitness.entidad.dtos.*;
 import YadosFitness.entidad.entities.Dieta;
 
 public class Mapper {

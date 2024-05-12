@@ -1,6 +1,6 @@
 package YadosFitness.entidad.controllers;
 
-import YadosFitness.dtos.*;
+import YadosFitness.entidad.dtos.*;
 import YadosFitness.entidad.entities.Dieta;
 import YadosFitness.entidad.exceptions.*;
 import YadosFitness.entidad.repositories.DietaRepository;
@@ -16,14 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
 
@@ -39,7 +31,7 @@ public class DietaController {
     @GetMapping
     public List<DietaDTO> getDietas(@RequestParam(value = "idEntrenador", required = false) Long idEntrenador,@RequestParam(value = "idCliente", required = false) Long idCliente){
         if ((idEntrenador==null && idCliente==null) || (idEntrenador!=null && idCliente!=null)) {
-            throw new IllegalArgumentException("Especificar sólo un parámetro");
+            throw new IllegalArgumentException("Especificar solo un parametro");
         }else if (idCliente!=null){
             return  logicaDieta.dietasDeCliente(idCliente).stream().map(Mapper :: toDietaDTO).toList();
         }else{
@@ -47,20 +39,21 @@ public class DietaController {
         }
     }
     @PutMapping
-    public ResponseEntity<DietaDTO> putDieta(@RequestParam Long idCliente, @RequestParam DietaDTO dietaDTO){
+    public ResponseEntity<DietaDTO> putDieta(@RequestParam Long idCliente, @RequestBody DietaDTO dietaDTO){
         Dieta dieta = Mapper.toDietaId(dietaDTO);
         logicaDieta.asignarDieta(dieta.getId(),idCliente);
         return ResponseEntity.of(logicaDieta.getDietaById(dieta.getId()).map(Mapper::toDietaDTO));
     }
     @PostMapping
-    public ResponseEntity<DietaDTO> postDieta(@RequestParam Long idEntrenador,@RequestParam DietaNuevaDTO dietaDTO, UriComponentsBuilder b) {
+    public ResponseEntity<DietaDTO> postDieta(@RequestParam Long idEntrenador,@RequestBody DietaNuevaDTO dietaDTO, UriComponentsBuilder b) {
         Dieta dieta = Mapper.toDieta(dietaDTO);
+        dieta.setId(null);
         dieta.setEntrenador(idEntrenador);
-        logicaDieta.addDieta(dieta);
+        dieta = logicaDieta.addDieta(dieta);
         DietaDTO d = Mapper.toDietaDTO(dieta);
         return ResponseEntity.created(b
                 .path("/dieta/{id}")
-                .buildAndExpand(d.getId())
+                .buildAndExpand(String.format("/%d", d.getId()))
                 .toUri())
             .body(d);
     }
