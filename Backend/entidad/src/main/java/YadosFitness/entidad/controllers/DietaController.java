@@ -1,15 +1,13 @@
 package YadosFitness.entidad.controllers;
 
-import YadosFitness.dtos.*;
+import YadosFitness.entidad.dtos.*;
 import YadosFitness.entidad.entities.Dieta;
 import YadosFitness.entidad.exceptions.*;
-import YadosFitness.entidad.repositories.DietaRepository;
 import YadosFitness.entidad.services.*;
 
-import java.net.URI;
+
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
+
 
 
 import org.springframework.http.HttpStatus;
@@ -19,9 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
