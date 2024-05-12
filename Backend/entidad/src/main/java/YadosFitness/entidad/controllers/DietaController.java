@@ -3,13 +3,11 @@ package YadosFitness.entidad.controllers;
 import YadosFitness.entidad.dtos.*;
 import YadosFitness.entidad.entities.Dieta;
 import YadosFitness.entidad.exceptions.*;
-import YadosFitness.entidad.repositories.DietaRepository;
 import YadosFitness.entidad.services.*;
 
-import java.net.URI;
+
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
+
 
 
 import org.springframework.http.HttpStatus;
@@ -61,7 +59,7 @@ public class DietaController {
     public ResponseEntity<DietaDTO> getDieta(@RequestParam Long id) {
         return ResponseEntity.of(logicaDieta.getDietaById(id).map(Mapper::toDietaDTO));
     }
-    
+
     @PutMapping("/{id}")
     public DietaDTO putDietaId(@RequestParam Long id, @RequestParam DietaDTO dietaDTO) {
         dietaDTO.setId(id);
@@ -78,7 +76,7 @@ public class DietaController {
     @ExceptionHandler(DietaNoExisteException.class)
 	@ResponseStatus(code = HttpStatus.NOT_FOUND)
 	public void noEncontrado() {}
-	
+
 	@ExceptionHandler(DietaExistException.class)
 	@ResponseStatus(code = HttpStatus.FORBIDDEN)
 	public void existente() {}

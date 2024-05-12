@@ -1,6 +1,5 @@
 package YadosFitness.entidad.dtos;
 import java.util.ArrayList;
-import java.util.Set;
 
 
 import lombok.*;
