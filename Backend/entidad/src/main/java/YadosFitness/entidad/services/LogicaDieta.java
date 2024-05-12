@@ -63,12 +63,7 @@ public class LogicaDieta {
 
     public Dieta updateDieta(Dieta dieta){
         if(repo.existsById(dieta.getId())){
-            var opDieta = repo.findById(dieta.getId());
-            opDieta.ifPresent(n -> {
-                n.setNombre(dieta.getNombre());
-                n.setDescripcion(dieta.getDescripcion());
-            });
-            return repo.save(opDieta.get());
+            return repo.save(dieta);
         }else{
             throw new DietaNoExisteException("Dieta no existe");
         }
