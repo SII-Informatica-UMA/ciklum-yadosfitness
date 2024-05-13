@@ -16,6 +16,7 @@ import org.springframework.web.util.UriBuilderFactory;
 
 import YadosFitness.entidad.dtos.DietaDTO;
 import YadosFitness.entidad.dtos.DietaNuevaDTO;
+import YadosFitness.entidad.entities.Dieta;
 import YadosFitness.entidad.repositories.DietaRepository;
 import java.net.URI;
 import java.util.ArrayList;
@@ -165,12 +166,12 @@ public class DietasApplicationTests {
 		@DisplayName("entrenador añade una dieta")
 		public void entrenadorAnadeUnaDieta() {
 			var dieta = DietaNuevaDTO.builder()
+
 						.nombre("Dieta 1")
 						.descripcion("Dieta para adelgazar")
 						.observaciones("No comer dulces")
 						.objetivo("Perder peso")
 						.duracionDias(30)
-						.alimentos(new ArrayList<String>())
 						.recomendaciones("Hacer ejercicio")
 						.build();
 
@@ -178,20 +179,47 @@ public class DietasApplicationTests {
 			var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
 
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
-			
+			assertThat(respuesta.getBody().getNombre()).isEqualTo("Dieta 1");
 		}
 
 	}
     @Nested
     @DisplayName("cuando hay dietas con datos")
-    class DietasConDatos {
+    public class DietasConDatos {
 		
-        @Test
-        @DisplayName("nombre de la prueba")
-        void nombreDeLaPrueba() {
-            // Lógica de prueba
-        }
 
+        @Test
+        @DisplayName("devuelve una dieta por id")
+        public void devuelveUnaDietaPorId() {
+            var dieta1 = new Dieta();
+            dieta1.setId(1L);
+            dieta1.setNombre("Dieta 1");
+            dieta1.setDescripcion("Dieta para adelgazar");
+            dieta1.setObservaciones("No comer dulces");
+            dieta1.setObjetivo("Perder peso");
+            dietaRepository.save(dieta1);
+
+            var peticion = get("http", "localhost", port, "/dieta/1");
+            var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+            assertThat(respuesta.getBody().getId()).isEqualTo(1L);
+        }
+        @Test
+        @DisplayName("elimina una dieta por id")
+        public void eliminaUnaDietaPorId() {
+            var dieta1 = new Dieta();
+            dieta1.setId(1L);
+            dieta1.setNombre("Dieta 1");
+            dieta1.setDescripcion("Dieta para adelgazar");
+            dieta1.setObservaciones("No comer dulces");
+            dieta1.setObjetivo("Perder peso");
+            dietaRepository.save(dieta1);
+            var peticion = delete("http", "localhost", port, "/dieta/1");
+            var respuesta = restTemplate.exchange(peticion, Void.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+        }
+        //ARREGLAR
+        
     }
 	
 }

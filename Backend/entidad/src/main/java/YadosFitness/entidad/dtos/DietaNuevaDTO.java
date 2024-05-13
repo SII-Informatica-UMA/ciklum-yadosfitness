@@ -1,6 +1,6 @@
 package YadosFitness.entidad.dtos;
 import java.util.ArrayList;
-
+import java.util.List;
 
 import lombok.*;
 
@@ -17,6 +17,6 @@ public class DietaNuevaDTO {
     private String observaciones;
     private String objetivo;
     private int duracionDias;
-    private ArrayList<String> alimentos;
+    private List<String> alimentos;
     private String recomendaciones;
 }

@@ -1,6 +1,7 @@
 package YadosFitness.entidad.entities;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -10,7 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Builder;
-@Builder
+
 @Entity
 public class Dieta {
     
@@ -24,12 +25,12 @@ public class Dieta {
     @Column(name = "DURACION_DIAS")
     private int duracionDias;
     @ElementCollection
-    private ArrayList<String> alimentos;
+    private List<String> alimentos;
     private String recomendaciones;
-    @Column(name = "ENTRENADOR_ID", nullable = false)
+    
     private Long entrenadorId;
     @ElementCollection
-    @Column(name = "CLIENTE_ID", nullable = false)
+    
     private Set<Long> clienteId;
     
 
@@ -54,7 +55,7 @@ public class Dieta {
         return duracionDias;
     }
 
-    public ArrayList<String> getAlimentos() {
+    public List<String> getAlimentos() {
         return alimentos;
     }
 
@@ -69,6 +70,10 @@ public class Dieta {
     public Long getEntrenador() {
         return entrenadorId;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+     }
 
     public void setEntrenador(Long entrenadorId) {
         this.entrenadorId = entrenadorId;
@@ -103,13 +108,28 @@ public class Dieta {
         this.duracionDias = duracionDias;
     }
 
-    public void setAlimentos(ArrayList<String> alimentos) {
+    public void setAlimentos(List<String> alimentos) {
         this.alimentos = alimentos;
     }
 
     public void setRecomendaciones(String recomendaciones) {
         this.recomendaciones = recomendaciones;
     }
+
+    public Dieta(Long id, String nombre, String descripcion, String observaciones, String objetivo, Integer duracionDias, ArrayList<String> alimentos, String recomendaciones, Long idEntrenador, Set<Long> idClientes) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.observaciones = observaciones;
+        this.objetivo = objetivo;
+        this.duracionDias = duracionDias;
+        this.alimentos = alimentos;
+        this.recomendaciones = recomendaciones;
+        this.entrenadorId = idEntrenador;
+        this.clienteId = idClientes;
+      }
+
+      public Dieta() {}
     
     @Override
     public boolean equals(Object obj) {

@@ -33,7 +33,8 @@ public class LogicaDieta {
     }
 
     public List<Dieta> dietasDeEntrenador(Long idEntrenador) {
-        return repo.findByEntrenadorId(idEntrenador);
+        //return repo.findByEntrenadorId(idEntrenador);
+        return repo.findAllByEntrenadorId(idEntrenador);
     }
 
     public void asignarDieta(Long idDieta, Long idCliente) {
@@ -50,7 +51,7 @@ public class LogicaDieta {
             throw new DietaExistException("Dieta ya existente");
         }
         
-        return repo.save(dieta);
+        return (Dieta)repo.save(dieta);
     }
 
     public Optional<Dieta> getDietaById(Long id){
@@ -72,14 +73,11 @@ public class LogicaDieta {
     }
 
     public void deleteById(Long id){
-        var dieta = repo.findById(id);
-
-        if(dieta.isPresent()){
+        if(repo.existsById(id)){
             repo.deleteById(id);
         }else{
-            throw new DietaNoExisteException("Dieta no existente");
+            throw new DietaNoExisteException("Dieta no existe");
         }
-    
     }
     
 }

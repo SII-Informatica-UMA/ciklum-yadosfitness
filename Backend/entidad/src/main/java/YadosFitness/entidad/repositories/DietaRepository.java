@@ -22,5 +22,5 @@ public interface DietaRepository extends JpaRepository<Dieta, Long> {
     //List<Dieta> findByClienteId(Set<Long> clienteId);
     List<Dieta> findByEntrenadorId(Long entrenadorid);
     List<Dieta> findByNombre(String nombre);
-    
+    List<Dieta> findAllByEntrenadorId(Long entrenadorId);
 }

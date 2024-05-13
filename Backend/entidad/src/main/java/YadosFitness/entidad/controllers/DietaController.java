@@ -23,9 +23,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/dieta")
 public class DietaController {
     private LogicaDieta logicaDieta;
+
     public DietaController(LogicaDieta logicaDieta){
         this.logicaDieta =logicaDieta;
     }
+
     @GetMapping
     public List<DietaDTO> getDietas(@RequestParam(value = "idEntrenador", required = false) Long idEntrenador,@RequestParam(value = "idCliente", required = false) Long idCliente){
         if ((idEntrenador==null && idCliente==null) || (idEntrenador!=null && idCliente!=null)) {
@@ -36,16 +38,17 @@ public class DietaController {
             return logicaDieta.dietasDeEntrenador(idEntrenador).stream().map(Mapper :: toDietaDTO).toList();
         }
     }
+
     @PutMapping
     public ResponseEntity<DietaDTO> putDieta(@RequestParam Long idCliente, @RequestBody DietaDTO dietaDTO){
-        Dieta dieta = Mapper.toDietaId(dietaDTO);
-        logicaDieta.asignarDieta(dieta.getId(),idCliente);
-        return ResponseEntity.of(logicaDieta.getDietaById(dieta.getId()).map(Mapper::toDietaDTO));
+        logicaDieta.asignarDieta(dietaDTO.getId(),idCliente);
+        return ResponseEntity.of(logicaDieta.getDietaById(dietaDTO.getId()).map(Mapper::toDietaDTO));
     }
+
     @PostMapping
     public ResponseEntity<DietaDTO> postDieta(@RequestParam Long idEntrenador,@RequestBody DietaNuevaDTO dietaDTO, UriComponentsBuilder b) {
         Dieta dieta = Mapper.toDieta(dietaDTO);
-        dieta.setId(null);
+        dieta.setId(1L);
         dieta.setEntrenador(idEntrenador);
         dieta = logicaDieta.addDieta(dieta);
         DietaDTO d = Mapper.toDietaDTO(dieta);
@@ -55,24 +58,30 @@ public class DietaController {
                 .toUri())
             .body(d);
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<DietaDTO> getDieta(@RequestParam Long id) {
+    public ResponseEntity<DietaDTO> getDieta(@PathVariable Long id) {
         return ResponseEntity.of(logicaDieta.getDietaById(id).map(Mapper::toDietaDTO));
     }
 
     @PutMapping("/{id}")
-    public DietaDTO putDietaId(@RequestParam Long id, @RequestParam DietaDTO dietaDTO) {
+    public DietaDTO putDietaId(@PathVariable Long id, @RequestParam DietaDTO dietaDTO) {
         dietaDTO.setId(id);
         Dieta d= logicaDieta.updateDieta(Mapper.toDietaId(dietaDTO));
         return Mapper.toDietaDTO(d);
     }
+
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteDieta(@PathVariable Long id){
-        logicaDieta.deleteById(id);
+    public ResponseEntity<Void> deleteDieta(@PathVariable Long id){
+        try {
+            logicaDieta.deleteById(id);
+            return ResponseEntity.ok().build();
+        } catch (DietaNoExisteException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-
+    /* 
     @ExceptionHandler(DietaNoExisteException.class)
 	@ResponseStatus(code = HttpStatus.NOT_FOUND)
 	public void noEncontrado() {}
@@ -80,4 +89,5 @@ public class DietaController {
 	@ExceptionHandler(DietaExistException.class)
 	@ResponseStatus(code = HttpStatus.FORBIDDEN)
 	public void existente() {}
+    */
 }
