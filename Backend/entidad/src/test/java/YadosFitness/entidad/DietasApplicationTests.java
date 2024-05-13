@@ -117,7 +117,6 @@ public class DietasApplicationTests {
     @Nested
     @DisplayName("cuando no hay dietas")
     public class DietasVacias {
-
         @Test
         @DisplayName("devuelve lista de dietas vacía por entrenador")
         public void devuelveListaDeDietasVaciaPorEntrenador() {
@@ -187,10 +186,8 @@ public class DietasApplicationTests {
     @DisplayName("cuando hay dietas con datos")
     public class DietasConDatos {
 		
-
-        @Test
-        @DisplayName("devuelve una dieta por id")
-        public void devuelveUnaDietaPorId() {
+        @BeforeEach
+        public void init() {
             var dieta1 = new Dieta();
             dieta1.setId(1L);
             dieta1.setNombre("Dieta 1");
@@ -199,26 +196,31 @@ public class DietasApplicationTests {
             dieta1.setObjetivo("Perder peso");
             dietaRepository.save(dieta1);
 
+            var dieta2 = new Dieta();
+            dieta2.setId(2L);
+            dieta2.setNombre("Dieta 2");
+            dieta2.setDescripcion("Dieta para engordar");
+            dieta2.setObservaciones("Comer dulces");
+            dieta2.setObjetivo("Aumentar peso");
+            dietaRepository.save(dieta2);
+        }
+
+        @Test
+        @DisplayName("elimina una dieta por id")
+        public void eliminaUnaDietaPorId() {
+            var peticion = delete("http", "localhost", port, "/dieta/1");
+            var respuesta = restTemplate.exchange(peticion, Void.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+        }
+        //ARREGLAR
+        @Test
+        @DisplayName("devuelve una dieta por id")
+        public void devuelveUnaDietaPorId() {
             var peticion = get("http", "localhost", port, "/dieta/1");
             var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
             assertThat(respuesta.getBody().getId()).isEqualTo(1L);
         }
-        @Test
-        @DisplayName("elimina una dieta por id")
-        public void eliminaUnaDietaPorId() {
-            var dieta1 = new Dieta();
-            dieta1.setId(1L);
-            dieta1.setNombre("Dieta 1");
-            dieta1.setDescripcion("Dieta para adelgazar");
-            dieta1.setObservaciones("No comer dulces");
-            dieta1.setObjetivo("Perder peso");
-            dietaRepository.save(dieta1);
-            var peticion = delete("http", "localhost", port, "/dieta/1");
-            var respuesta = restTemplate.exchange(peticion, Void.class);
-            assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
-        }
-        //ARREGLAR
         
     }
 	

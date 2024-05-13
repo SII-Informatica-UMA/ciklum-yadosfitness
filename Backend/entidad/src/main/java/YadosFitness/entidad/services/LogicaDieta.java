@@ -73,10 +73,12 @@ public class LogicaDieta {
     }
 
     public void deleteById(Long id){
-        if(repo.existsById(id)){
-            repo.deleteById(id);
-        }else{
+        var dieta = repo.findById(id);
+        if(!dieta.isPresent()){
             throw new DietaNoExisteException("Dieta no existe");
+        }else{
+            
+            repo.deleteById(id);
         }
     }
     
