@@ -40,35 +40,55 @@ public class DietaController {
     }
 
     @PutMapping
-    public ResponseEntity<DietaDTO> putDieta(@RequestParam Long idCliente, @RequestBody DietaDTO dietaDTO){
-        logicaDieta.asignarDieta(dietaDTO.getId(),idCliente);
-        return ResponseEntity.of(logicaDieta.getDietaById(dietaDTO.getId()).map(Mapper::toDietaDTO));
+    public ResponseEntity<DietaDTO> putDieta(@RequestParam(value = "idCliente", required = true) Long idCliente, @RequestBody DietaDTO dietaDTO){
+        try {
+            logicaDieta.asignarDieta(dietaDTO.getId(),idCliente);
+            return ResponseEntity.ok().build();
+        } catch (DietaNoExisteException e) {
+            return ResponseEntity.notFound().build();
+        }
+        
     }
 
     @PostMapping
-    public ResponseEntity<DietaDTO> postDieta(@RequestParam Long idEntrenador,@RequestBody DietaNuevaDTO dietaDTO, UriComponentsBuilder b) {
-        Dieta dieta = Mapper.toDieta(dietaDTO);
-        dieta.setId(1L);
-        dieta.setEntrenador(idEntrenador);
-        dieta = logicaDieta.addDieta(dieta);
-        DietaDTO d = Mapper.toDietaDTO(dieta);
-        return ResponseEntity.created(b
-                .path("/dieta/{id}")
-                .buildAndExpand(String.format("/%d", d.getId()))
-                .toUri())
-            .body(d);
+    public ResponseEntity<DietaDTO> postDieta(@RequestParam(value = "idEntrenador", required = true) Long idEntrenador,@RequestBody DietaNuevaDTO dietaDTO, UriComponentsBuilder b) {
+        try {
+            Dieta dieta = Mapper.toDieta(dietaDTO);
+            dieta.setId(1L);
+            dieta.setEntrenador(idEntrenador);
+            dieta = logicaDieta.addDieta(dieta);
+            DietaDTO d = Mapper.toDietaDTO(dieta);
+            return ResponseEntity.created(b
+                    .path("/dieta/{id}")
+                    .buildAndExpand(String.format("/%d", d.getId()))
+                    .toUri())
+                .body(d);
+        } catch (DietaExistException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DietaDTO> getDieta(@PathVariable Long id) {
-        return ResponseEntity.of(logicaDieta.getDietaById(id).map(Mapper::toDietaDTO));
+        try {
+            return ResponseEntity.of(logicaDieta.getDietaById(id).map(Mapper::toDietaDTO));
+        } catch (DietaNoExisteException e) {
+            return ResponseEntity.notFound().build();
+        }
+        
     }
 
     @PutMapping("/{id}")
-    public DietaDTO putDietaId(@PathVariable Long id, @RequestParam DietaDTO dietaDTO) {
-        dietaDTO.setId(id);
-        Dieta d= logicaDieta.updateDieta(Mapper.toDietaId(dietaDTO));
-        return Mapper.toDietaDTO(d);
+    public ResponseEntity<DietaDTO> putDietaId(@PathVariable Long id, @RequestBody DietaDTO dietaDTO) {
+        try {
+            dietaDTO.setId(id);
+            logicaDieta.updateDieta(Mapper.toDietaId(dietaDTO));
+            return ResponseEntity.ok().build();
+        } catch (DietaNoExisteException e) {
+            return ResponseEntity.notFound().build();
+        }
+        
     }
 
     @DeleteMapping("/{id}")

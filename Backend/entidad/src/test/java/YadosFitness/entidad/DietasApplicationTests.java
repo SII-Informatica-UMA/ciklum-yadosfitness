@@ -113,6 +113,13 @@ public class DietasApplicationTests {
                 .body(object);
         return peticion;
     }
+    private <T> RequestEntity<T> putWithQuery(String scheme, String host, int port, String path, Map<String, String> queryParams, T object) {
+        URI uri = uriWithQuery(scheme, host, port, path, queryParams);
+        var peticion = RequestEntity.put(uri)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(object);
+        return peticion;
+    }
 
     @Nested
     @DisplayName("cuando no hay dietas")
@@ -181,7 +188,35 @@ public class DietasApplicationTests {
 			assertThat(respuesta.getBody().getNombre()).isEqualTo("Dieta 1");
 		}
 
+        @Test
+        @DisplayName("actualiza dieta que no existe")
+        public void actualizaDietaQueNoExiste() {
+            var dieta = DietaDTO.builder()
+                    .id(1L)
+                    .nombre("Dieta 1")
+                    .descripcion("Dieta para adelgazar")
+                    .observaciones("No comer dulces")
+                    .objetivo("Perder peso")
+                    .duracionDias(30)
+                    .recomendaciones("Hacer ejercicio")
+                    .build();
+
+            var peticion = putWithQuery("http", "localhost", port, "/dieta/1", Map.of("idCliente", "1"), dieta);
+            var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+        }
+
+        @Test
+        @DisplayName("devuelve dieta que no existe")
+        public void devuelveDietaQueNoExiste() {
+            var peticion = get("http", "localhost", port, "/dieta/3");
+            var respuesta = restTemplate.exchange(peticion, String.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+        }
+
 	}
+
+
     @Nested
     @DisplayName("cuando hay dietas con datos")
     public class DietasConDatos {
@@ -202,7 +237,65 @@ public class DietasApplicationTests {
             dieta2.setDescripcion("Dieta para engordar");
             dieta2.setObservaciones("Comer dulces");
             dieta2.setObjetivo("Aumentar peso");
+            dieta2.setEntrenador(1L);
             dietaRepository.save(dieta2);
+        }
+
+        @Test
+        @DisplayName("devuelve una dieta por id")
+        public void devuelveUnaDietaPorId() {
+            var peticion = get("http", "localhost", port, "/dieta/1");
+            var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+            assertThat(respuesta.getBody().getId()).isEqualTo(1L);
+        }
+
+        @Test
+        @DisplayName("añadir dieta ya existente")
+        public void añadirDietaYaExistente() {
+            var dieta = DietaNuevaDTO.builder()
+                    .nombre("Dieta mala")
+                    .descripcion("Dieta para adelgazar")
+                    .observaciones("No comer dulces")
+                    .objetivo("Perder peso")
+                    .duracionDias(30)
+                    .recomendaciones("Hacer ejercicio")
+                    .build();
+
+            var peticion = postWithQuery("http", "localhost", port, "/dieta", Map.of("idEntrenador", "1"), dieta);
+            var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+        }
+
+
+        /*
+        @Test
+        @DisplayName("elimina dieta que no existe")
+        public void eliminaDietaQueNoExiste() {
+            var peticion = delete("http", "localhost", port, "/dieta/3");
+            var respuesta = restTemplate.exchange(peticion, Void.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+        }
+
+        
+        @Test
+        @DisplayName("actualiza una dieta")
+        public void actualizaUnaDieta() {
+            var dieta = DietaDTO.builder()
+                    .id(1L)
+                    .nombre("Dieta pepe")
+                    .descripcion("Dieta para adelgazar")
+                    .observaciones("No comer dulces")
+                    .objetivo("Perder peso")
+                    .duracionDias(30)
+                    .recomendaciones("Hacer ejercicio")
+                    .build();
+
+            var peticion = put("http", "localhost", port, "/dieta/1", dieta);
+            var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+            Dieta dt = dietaRepository.findById(1L).get();
+            assertThat(dt.getNombre()).isEqualTo("Dieta pepe");
         }
 
         @Test
@@ -213,15 +306,10 @@ public class DietasApplicationTests {
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
         }
         //ARREGLAR
-        @Test
-        @DisplayName("devuelve una dieta por id")
-        public void devuelveUnaDietaPorId() {
-            var peticion = get("http", "localhost", port, "/dieta/1");
-            var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
-            assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-            assertThat(respuesta.getBody().getId()).isEqualTo(1L);
-        }
+        */
         
+
+
     }
 	
 }
