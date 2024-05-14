@@ -264,7 +264,7 @@ public class DietasApplicationTests {
 
             var peticion = postWithQuery("http", "localhost", port, "/dieta", Map.of("idEntrenador", "1"), dieta);
             var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
-            assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
         }
 
 

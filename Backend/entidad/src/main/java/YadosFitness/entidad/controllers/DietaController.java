@@ -52,7 +52,7 @@ public class DietaController {
 
     @PostMapping
     public ResponseEntity<DietaDTO> postDieta(@RequestParam(value = "idEntrenador", required = true) Long idEntrenador,@RequestBody DietaNuevaDTO dietaDTO, UriComponentsBuilder b) {
-        try {
+        
             Dieta dieta = Mapper.toDieta(dietaDTO);
             dieta.setId(1L);
             dieta.setEntrenador(idEntrenador);
@@ -63,9 +63,7 @@ public class DietaController {
                     .buildAndExpand(String.format("/%d", d.getId()))
                     .toUri())
                 .body(d);
-        } catch (DietaExistException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        
         
     }
 
