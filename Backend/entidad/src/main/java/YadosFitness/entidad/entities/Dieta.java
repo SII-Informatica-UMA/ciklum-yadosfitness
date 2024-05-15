@@ -27,10 +27,8 @@ public class Dieta {
     @ElementCollection
     private List<String> alimentos;
     private String recomendaciones;
-    
     private Long entrenadorId;
     @ElementCollection
-    
     private Set<Long> clienteId;
     
 

@@ -2,6 +2,7 @@ package YadosFitness.entidad.repositories;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,6 +22,7 @@ public interface DietaRepository extends JpaRepository<Dieta, Long> {
     List<Dieta> findByClienteId(Long idCliente);
     //List<Dieta> findByClienteId(Set<Long> clienteId);
     List<Dieta> findByEntrenadorId(Long entrenadorid);
-    List<Dieta> findByNombre(String nombre);
+    Optional<Dieta> findByNombre(String nombre);
+    List<Dieta> findAllByNombre(String nombre);
     List<Dieta> findAllByEntrenadorId(Long entrenadorId);
 }

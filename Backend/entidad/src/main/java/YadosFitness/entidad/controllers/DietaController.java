@@ -52,19 +52,20 @@ public class DietaController {
 
     @PostMapping
     public ResponseEntity<DietaDTO> postDieta(@RequestParam(value = "idEntrenador", required = true) Long idEntrenador,@RequestBody DietaNuevaDTO dietaDTO, UriComponentsBuilder b) {
-        
-            Dieta dieta = Mapper.toDieta(dietaDTO);
-            dieta.setId(1L);
-            dieta.setEntrenador(idEntrenador);
-            dieta = logicaDieta.addDieta(dieta);
-            DietaDTO d = Mapper.toDietaDTO(dieta);
+        try {
+            Dieta d = Mapper.toDieta(dietaDTO);
+            d.setId(null);
+            d.setEntrenador(idEntrenador);
+            d = logicaDieta.addDieta(d);
+            var dDTO = Mapper.toDietaDTO(d);
             return ResponseEntity.created(b
                     .path("/dieta/{id}")
                     .buildAndExpand(String.format("/%d", d.getId()))
                     .toUri())
-                .body(d);
-        
-        
+                .body(dDTO);
+        } catch (DietaExistException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @GetMapping("/{id}")
@@ -86,7 +87,6 @@ public class DietaController {
         } catch (DietaNoExisteException e) {
             return ResponseEntity.notFound().build();
         }
-        
     }
 
     @DeleteMapping("/{id}")

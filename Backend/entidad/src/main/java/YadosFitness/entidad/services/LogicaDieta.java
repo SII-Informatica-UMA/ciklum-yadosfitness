@@ -1,6 +1,8 @@
 package YadosFitness.entidad.services;
 
 import YadosFitness.entidad.repositories.DietaRepository;
+import YadosFitness.entidad.controllers.Mapper;
+import YadosFitness.entidad.dtos.DietaNuevaDTO;
 import YadosFitness.entidad.entities.Dieta;
 import YadosFitness.entidad.exceptions.DietaExistException;
 import YadosFitness.entidad.exceptions.DietaNoExisteException;
@@ -18,7 +20,6 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class LogicaDieta {
     private DietaRepository repo;
-
 
     public LogicaDieta(DietaRepository repo){
         this.repo = repo;
@@ -47,10 +48,10 @@ public class LogicaDieta {
     }
 
     public Dieta addDieta(Dieta dieta){
-        if(repo.findById(dieta.getId()).isPresent()){
+        if(repo.findByNombre(dieta.getNombre()).isPresent() ){
             throw new DietaExistException("Dieta ya existente");
         }
-        
+      
         return (Dieta)repo.save(dieta);
     }
 
@@ -76,8 +77,7 @@ public class LogicaDieta {
         var dieta = repo.findById(id);
         if(!dieta.isPresent()){
             throw new DietaNoExisteException("Dieta no existe");
-        }else{
-            
+        }else{   
             repo.deleteById(id);
         }
     }
