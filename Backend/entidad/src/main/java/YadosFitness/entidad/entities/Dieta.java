@@ -125,7 +125,7 @@ public class Dieta {
         this.recomendaciones = recomendaciones;
         this.entrenadorId = idEntrenador;
         this.clienteId = idClientes;
-      }
+    }
 
       public Dieta() {}
     

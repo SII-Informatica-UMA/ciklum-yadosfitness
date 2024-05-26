@@ -92,6 +92,10 @@ public class JwtUtil {
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
+    public String generateToken(String user) {
+        Map<String, Object> claims = new HashMap<>();
+        return doGenerateToken(claims, user);
+    }
     
 
     //while creating the token -

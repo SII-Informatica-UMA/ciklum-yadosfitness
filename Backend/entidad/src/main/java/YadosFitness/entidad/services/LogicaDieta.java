@@ -27,14 +27,13 @@ public class LogicaDieta {
 
     public List<Dieta> dietasDeCliente(Long idCliente) {
         /*
-         *  Set<Long> ids = new HashSet<>();
-        ids.add(idCliente);
+            Set<Long> ids = new HashSet<>();
+            ids.add(idCliente);
          */
         return repo.findByClienteId(idCliente);
     }
 
     public List<Dieta> dietasDeEntrenador(Long idEntrenador) {
-        //return repo.findByEntrenadorId(idEntrenador);
         return repo.findAllByEntrenadorId(idEntrenador);
     }
 

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.test.annotation.DirtiesContext;
@@ -16,13 +17,16 @@ import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
-
+import org.springframework.http.HttpHeaders;
 import YadosFitness.entidad.controllers.Mapper;
 import YadosFitness.entidad.dtos.DietaDTO;
 import YadosFitness.entidad.dtos.DietaNuevaDTO;
 import YadosFitness.entidad.entities.Dieta;
 import YadosFitness.entidad.repositories.DietaRepository;
+import YadosFitness.entidad.security.JwtUtil;
+
 import java.net.URI;
+
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -43,9 +47,15 @@ public class DietasApplicationTests {
     @Autowired
     private DietaRepository dietaRepository;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    
+
     @BeforeEach
     public void initializeDatabase() {
         dietaRepository.deleteAll();
+        
     }
 
     private URI uri(String scheme, String host, int port, String... paths) {
@@ -76,28 +86,35 @@ public class DietasApplicationTests {
 	
     private RequestEntity<Void> get(String scheme, String host, int port, String path) {
         URI uri = uri(scheme, host, port, path);
+        String token = jwtUtil.generateToken("usuario");
         var peticion = RequestEntity.get(uri)
                 .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token)
                 .build();
         return peticion;
     }
 
 	public RequestEntity<Void> getWithQuery(String scheme, String host, int port, String path, Map<String, String> queryParams) {
 		URI uri = uriWithQuery(scheme, host, port, path, queryParams);
+        String token = jwtUtil.generateToken("usuario");
 		var peticion = RequestEntity.get(uri)
 				.accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token)
 				.build();
 		return peticion;
 	}
     private RequestEntity<Void> delete(String scheme, String host, int port, String path) {
         URI uri = uri(scheme, host, port, path);
+        String token = jwtUtil.generateToken("usuario");
         var peticion = RequestEntity.delete(uri)
+                .header("Authorization", "Bearer " + token)
                 .build();
         return peticion;
     }
 
     private <T> RequestEntity<T> post(String scheme, String host, int port, String path, T object) {
         URI uri = uri(scheme, host, port, path);
+        
         var peticion = RequestEntity.post(uri)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(object);
@@ -106,22 +123,28 @@ public class DietasApplicationTests {
 
 	private <T> RequestEntity<T> postWithQuery(String scheme, String host, int port, String path, Map<String, String> queryParams, T object) {
 		URI uri = uriWithQuery(scheme, host, port, path, queryParams);
+        String token = jwtUtil.generateToken("usuario"); 
 		var peticion = RequestEntity.post(uri)
 				.contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token)
 				.body(object);
 		return peticion;
 	}
     private <T> RequestEntity<T> put(String scheme, String host, int port, String path, T object) {
         URI uri = uri(scheme, host, port, path);
+        String token = jwtUtil.generateToken("usuario");
         var peticion = RequestEntity.put(uri)
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token)
                 .body(object);
         return peticion;
     }
     private <T> RequestEntity<T> putWithQuery(String scheme, String host, int port, String path, Map<String, String> queryParams, T object) {
         URI uri = uriWithQuery(scheme, host, port, path, queryParams);
+        String token = jwtUtil.generateToken("usuario");
         var peticion = RequestEntity.put(uri)
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token)
                 .body(object);
         return peticion;
     }
@@ -161,7 +184,7 @@ public class DietasApplicationTests {
 			var peticion = get("http", "localhost", port, "/dieta");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<String>() {
 			});
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(500);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
 		}
 
 		@Test
@@ -170,7 +193,7 @@ public class DietasApplicationTests {
 			var peticion = getWithQuery("http", "localhost", port, "/dieta", Map.of("idEntrenador", "1", "idCliente", "2"));
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<String>() {
 			});
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(500);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
 		}
 
 		@Test
@@ -185,8 +208,9 @@ public class DietasApplicationTests {
 						.duracionDias(30)
 						.recomendaciones("Hacer ejercicio")
 						.build();
-
+           
 			var peticion = postWithQuery("http", "localhost", port, "/dieta", Map.of("idEntrenador", "1"), dieta);
+            
 			var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
 
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
