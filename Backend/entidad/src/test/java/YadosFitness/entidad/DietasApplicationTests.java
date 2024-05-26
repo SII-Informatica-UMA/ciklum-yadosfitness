@@ -27,10 +27,9 @@ import YadosFitness.entidad.controllers.Mapper;
 import YadosFitness.entidad.dtos.DietaDTO;
 import YadosFitness.entidad.dtos.DietaNuevaDTO;
 import YadosFitness.entidad.entities.Dieta;
-import YadosFitness.entidad.entities.Usuario;
 import YadosFitness.entidad.repositories.DietaRepository;
 import YadosFitness.entidad.security.JwtUtil;
-import YadosFitness.entidad.services.UsuarioService;
+ 
 
 import java.net.URI;
 
@@ -157,27 +156,6 @@ public class DietasApplicationTests {
                 .header("Authorization", "Bearer " + token)
                 .body(object);
         return peticion;
-    }
-
-    //Mockito
-    @Mock
-    private RestTemplate restTemplateMock;
-
-    @InjectMocks
-    private UsuarioService usuarioService = new UsuarioService();
-
-    @Test
-    public void givenMockingIsDoneByMockito_whenGetIsCalled_shouldReturnMockedObject() {
-        JwtUtil jwtUtil = new JwtUtil();
-
-        Usuario emp = new Usuario(jwtUtil.generateToken(null), "Eric Simmons");
-        Mockito
-          .when(restTemplate.getForEntity(
-            "http://localhost:8080/employee/E001", Employee.class))
-          .thenReturn(new ResponseEntity(emp, HttpStatus.OK));
-
-        Employee employee = empService.getEmployee(id);
-        Assertions.assertEquals(emp, employee);
     }
 
 
@@ -310,6 +288,16 @@ public class DietasApplicationTests {
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
             assertThat(respuesta.getBody().getId()).isEqualTo(1L);
         }
+        
+        @Test
+        @DisplayName("devuelve una dieta por id")
+        public void devuelveUnaDietaPorIdd() {
+            var peticion = get("http", "localhost", port, "/dieta/");
+            var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+            assertThat(respuesta.getBody().getId()).isEqualTo(1L);
+        }
+
 
         @Test
         @DisplayName("añadir dieta ya existente")

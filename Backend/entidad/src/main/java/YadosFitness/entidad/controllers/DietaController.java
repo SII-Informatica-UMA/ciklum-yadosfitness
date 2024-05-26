@@ -37,6 +37,7 @@ public class DietaController {
         }else{
             return logicaDieta.dietasDeEntrenador(idEntrenador).stream().map(Mapper :: toDietaDTO).toList();
         }
+        
     }
 
     @PutMapping
@@ -71,7 +72,12 @@ public class DietaController {
     @GetMapping("/{id}")
     public ResponseEntity<DietaDTO> getDieta(@PathVariable Long id) {
         try {
-            return ResponseEntity.of(logicaDieta.getDietaById(id).map(Mapper::toDietaDTO));
+            if(id == null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }else{
+                return ResponseEntity.of(logicaDieta.getDietaById(id).map(Mapper::toDietaDTO));
+            }
+           
         } catch (DietaNoExisteException e) {
             return ResponseEntity.notFound().build();
         }
