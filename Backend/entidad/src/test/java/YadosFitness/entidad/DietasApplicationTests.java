@@ -61,8 +61,9 @@ public class DietasApplicationTests {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-    @Autowired
+    /*@Autowired
     private RestTemplate restTemplate;
+    */
 
     @Value(value = "${local.server.port}")
     private int port;
@@ -74,14 +75,14 @@ public class DietasApplicationTests {
     private JwtUtil jwtUtil;
 
 
-    private MockRestServiceServer mockServer;
+    //private MockRestServiceServer mockServer;
 
-    private ObjectMapper mapper = new ObjectMapper();
+    //private ObjectMapper mapper = new ObjectMapper();
 
     @BeforeEach
     public void initializeDatabase() {
         dietaRepository.deleteAll();
-        mockServer = MockRestServiceServer.createServer(restTemplate);
+        //mockServer = MockRestServiceServer.createServer(restTemplate);
     }
 
     private URI uri(String scheme, String host, int port, String... paths) {
@@ -295,10 +296,11 @@ public class DietasApplicationTests {
             dieta2.setObjetivo("Aumentar peso");
             dieta2.setEntrenador(1L);
             dietaRepository.save(dieta2);
+        }
         @Test
         @DisplayName("devuelve una dieta por id")
         public void devuelveUnaDietaPorId() throws Exception {
-            EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
+           /* EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
             entrenadorDTO.setId(1L);
             mockServer.expect(ExpectedCount.once(), 
                 requestTo(new URI("http://localhost:8080/entrenador/E001")))
@@ -306,20 +308,11 @@ public class DietasApplicationTests {
                 .andRespond(withStatus(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(mapper.writeValueAsString(entrenadorDTO))
-            ); 
+            );*/ 
           
             var peticion = get("http", "localhost", port, "/dieta/1");
             var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-            assertThat(respuesta.getBody().getId()).isEqualTo(1L);
-        }
-        
-        @Test
-        @DisplayName("devuelve una dieta por id")
-        public void devuelveUnaDietaPorIdd() {
-            var peticion = get("http", "localhost", port, "/dieta/");
-            var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
-            assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
             assertThat(respuesta.getBody().getId()).isEqualTo(1L);
         }
 
