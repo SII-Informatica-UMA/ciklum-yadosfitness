@@ -3,6 +3,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +18,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.annotation.DirtiesContext.MethodMode;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
@@ -22,8 +27,10 @@ import YadosFitness.entidad.controllers.Mapper;
 import YadosFitness.entidad.dtos.DietaDTO;
 import YadosFitness.entidad.dtos.DietaNuevaDTO;
 import YadosFitness.entidad.entities.Dieta;
+import YadosFitness.entidad.entities.Usuario;
 import YadosFitness.entidad.repositories.DietaRepository;
 import YadosFitness.entidad.security.JwtUtil;
+import YadosFitness.entidad.services.UsuarioService;
 
 import java.net.URI;
 
@@ -33,9 +40,12 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+import YadosFitness.entidad.security.JwtUtil;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@ExtendWith(MockitoExtension.class)
 public class DietasApplicationTests {
 
     @Autowired
@@ -50,12 +60,12 @@ public class DietasApplicationTests {
     @Autowired
     private JwtUtil jwtUtil;
 
-    
+
 
     @BeforeEach
     public void initializeDatabase() {
         dietaRepository.deleteAll();
-        
+
     }
 
     private URI uri(String scheme, String host, int port, String... paths) {
@@ -83,7 +93,7 @@ public class DietasApplicationTests {
 
         return ub.build();
     }
-	
+
     private RequestEntity<Void> get(String scheme, String host, int port, String path) {
         URI uri = uri(scheme, host, port, path);
         String token = jwtUtil.generateToken("usuario");
@@ -114,7 +124,7 @@ public class DietasApplicationTests {
 
     private <T> RequestEntity<T> post(String scheme, String host, int port, String path, T object) {
         URI uri = uri(scheme, host, port, path);
-        
+
         var peticion = RequestEntity.post(uri)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(object);
@@ -123,7 +133,7 @@ public class DietasApplicationTests {
 
 	private <T> RequestEntity<T> postWithQuery(String scheme, String host, int port, String path, Map<String, String> queryParams, T object) {
 		URI uri = uriWithQuery(scheme, host, port, path, queryParams);
-        String token = jwtUtil.generateToken("usuario"); 
+        String token = jwtUtil.generateToken("usuario");
 		var peticion = RequestEntity.post(uri)
 				.contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token)
@@ -148,7 +158,29 @@ public class DietasApplicationTests {
                 .body(object);
         return peticion;
     }
-    
+
+    //Mockito
+    @Mock
+    private RestTemplate restTemplateMock;
+
+    @InjectMocks
+    private UsuarioService usuarioService = new UsuarioService();
+
+    @Test
+    public void givenMockingIsDoneByMockito_whenGetIsCalled_shouldReturnMockedObject() {
+        JwtUtil jwtUtil = new JwtUtil();
+
+        Usuario emp = new Usuario(jwtUtil.generateToken(null), "Eric Simmons");
+        Mockito
+          .when(restTemplate.getForEntity(
+            "http://localhost:8080/employee/E001", Employee.class))
+          .thenReturn(new ResponseEntity(emp, HttpStatus.OK));
+
+        Employee employee = empService.getEmployee(id);
+        Assertions.assertEquals(emp, employee);
+    }
+
+
     @Nested
     @DisplayName("cuando no hay dietas")
     public class DietasVacias {
@@ -164,7 +196,7 @@ public class DietasApplicationTests {
 			assertThat(respuesta.getBody().isEmpty());
 
     	}
-		
+
 		@Test
 		@DisplayName("devuelve lista de dietas vacía por cliente")
 		public void devuelveListaDeDietasVaciaPorCliente() {
@@ -177,9 +209,9 @@ public class DietasApplicationTests {
 			assertThat(respuesta.getBody().isEmpty());
 		}
 
-		@Test 
+		@Test
 		@DisplayName("error devuelve dieta no paso parametro")
-		
+
 		public void errorDevuelveDietaNoPasoParametro() {
 			var peticion = get("http", "localhost", port, "/dieta");
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<String>() {
@@ -208,9 +240,9 @@ public class DietasApplicationTests {
 						.duracionDias(30)
 						.recomendaciones("Hacer ejercicio")
 						.build();
-           
+
 			var peticion = postWithQuery("http", "localhost", port, "/dieta", Map.of("idEntrenador", "1"), dieta);
-            
+
 			var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
 
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
@@ -249,7 +281,7 @@ public class DietasApplicationTests {
     @Nested
     @DisplayName("cuando hay dietas con datos")
     public class DietasConDatos {
-		
+
         @BeforeEach
         public void init() {
             var dieta1 = new Dieta();
@@ -296,7 +328,7 @@ public class DietasApplicationTests {
             assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
         }
 
-       
+
 
         @Test
         @DisplayName("error asignar cliente a dieta que no existe")
@@ -350,7 +382,7 @@ public class DietasApplicationTests {
             Dieta dt = dietaRepository.findById(3L).get();
             assertThat(dt.getNombre()).isEqualTo("Dieta pepe");
         }
-        
+
          @Test
         @DisplayName("asignar cliente a dieta")
         public void asignarClienteADieta() {
@@ -361,10 +393,10 @@ public class DietasApplicationTests {
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
         }
 
-       
-        
+
+
         /*
-        
+
         @Test
         @DisplayName("actualiza una dieta")
         public void actualizaUnaDieta() {
@@ -392,7 +424,7 @@ public class DietasApplicationTests {
             Dieta dt = dietaRepository.findById(3L).get();
             assertThat(dt.getNombre()).isEqualTo("Dieta pepe");
         }
-        
+
          @Test
         @DisplayName("asignar cliente a dieta")
         public void asignarClienteADieta() {
@@ -403,11 +435,11 @@ public class DietasApplicationTests {
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
         }
 
-        
+
         */
-        
+
 
 
     }
-	
+
 }
