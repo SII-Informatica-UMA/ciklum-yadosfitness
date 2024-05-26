@@ -18,14 +18,23 @@ import org.springframework.http.RequestEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.annotation.DirtiesContext.MethodMode;
+import org.springframework.test.web.client.ExpectedCount;
+import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+
 import YadosFitness.entidad.controllers.Mapper;
 import YadosFitness.entidad.dtos.DietaDTO;
 import YadosFitness.entidad.dtos.DietaNuevaDTO;
+import YadosFitness.entidad.dtos.EntrenadorDTO;
 import YadosFitness.entidad.entities.Dieta;
 import YadosFitness.entidad.repositories.DietaRepository;
 import YadosFitness.entidad.security.JwtUtil;
@@ -41,6 +50,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import YadosFitness.entidad.security.JwtUtil;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -48,7 +59,10 @@ import YadosFitness.entidad.security.JwtUtil;
 public class DietasApplicationTests {
 
     @Autowired
-    private TestRestTemplate restTemplate;
+    private TestRestTemplate testRestTemplate;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Value(value = "${local.server.port}")
     private int port;
@@ -60,11 +74,14 @@ public class DietasApplicationTests {
     private JwtUtil jwtUtil;
 
 
+    private MockRestServiceServer mockServer;
+
+    private ObjectMapper mapper = new ObjectMapper();
 
     @BeforeEach
     public void initializeDatabase() {
         dietaRepository.deleteAll();
-
+        mockServer = MockRestServiceServer.createServer(restTemplate);
     }
 
     private URI uri(String scheme, String host, int port, String... paths) {
@@ -167,7 +184,7 @@ public class DietasApplicationTests {
         public void devuelveListaDeDietasVaciaPorEntrenador() {
             var peticion = getWithQuery("http", "localhost", port, "/dieta", Map.of("idEntrenador", "1"));
 
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<Set<DietaDTO>>() {
+			var respuesta = testRestTemplate.exchange(peticion, new ParameterizedTypeReference<Set<DietaDTO>>() {
         	});
 
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
@@ -180,7 +197,7 @@ public class DietasApplicationTests {
 		public void devuelveListaDeDietasVaciaPorCliente() {
 			var peticion = getWithQuery("http", "localhost", port, "/dieta", Map.of("idCliente", "2"));
 
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<Set<DietaDTO>>() {
+			var respuesta = testRestTemplate.exchange(peticion, new ParameterizedTypeReference<Set<DietaDTO>>() {
 			});
 
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
@@ -192,7 +209,7 @@ public class DietasApplicationTests {
 
 		public void errorDevuelveDietaNoPasoParametro() {
 			var peticion = get("http", "localhost", port, "/dieta");
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<String>() {
+			var respuesta = testRestTemplate.exchange(peticion, new ParameterizedTypeReference<String>() {
 			});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
 		}
@@ -201,7 +218,7 @@ public class DietasApplicationTests {
 		@DisplayName("error devuelve dieta paso dos parametros")
 		public void errorDevuelveDietaPasoDosParametros() {
 			var peticion = getWithQuery("http", "localhost", port, "/dieta", Map.of("idEntrenador", "1", "idCliente", "2"));
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<String>() {
+			var respuesta = testRestTemplate.exchange(peticion, new ParameterizedTypeReference<String>() {
 			});
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
 		}
@@ -221,7 +238,7 @@ public class DietasApplicationTests {
 
 			var peticion = postWithQuery("http", "localhost", port, "/dieta", Map.of("idEntrenador", "1"), dieta);
 
-			var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
+			var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
 
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 			assertThat(respuesta.getBody().getNombre()).isEqualTo("Dieta 1");
@@ -241,7 +258,7 @@ public class DietasApplicationTests {
                     .build();
 
             var peticion = putWithQuery("http", "localhost", port, "/dieta/1", Map.of("idCliente", "1"), dieta);
-            var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
+            var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
         }
 
@@ -249,7 +266,7 @@ public class DietasApplicationTests {
         @DisplayName("devuelve dieta que no existe")
         public void devuelveDietaQueNoExiste() {
             var peticion = get("http", "localhost", port, "/dieta/3");
-            var respuesta = restTemplate.exchange(peticion, String.class);
+            var respuesta = testRestTemplate.exchange(peticion, String.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
         }
 
@@ -278,13 +295,21 @@ public class DietasApplicationTests {
             dieta2.setObjetivo("Aumentar peso");
             dieta2.setEntrenador(1L);
             dietaRepository.save(dieta2);
-        }
-
         @Test
         @DisplayName("devuelve una dieta por id")
-        public void devuelveUnaDietaPorId() {
+        public void devuelveUnaDietaPorId() throws Exception {
+            EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
+            entrenadorDTO.setId(1L);
+            mockServer.expect(ExpectedCount.once(), 
+                requestTo(new URI("http://localhost:8080/entrenador/E001")))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(mapper.writeValueAsString(entrenadorDTO))
+            ); 
+          
             var peticion = get("http", "localhost", port, "/dieta/1");
-            var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
+            var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
             assertThat(respuesta.getBody().getId()).isEqualTo(1L);
         }
@@ -293,7 +318,7 @@ public class DietasApplicationTests {
         @DisplayName("devuelve una dieta por id")
         public void devuelveUnaDietaPorIdd() {
             var peticion = get("http", "localhost", port, "/dieta/");
-            var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
+            var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
             assertThat(respuesta.getBody().getId()).isEqualTo(1L);
         }
@@ -312,7 +337,7 @@ public class DietasApplicationTests {
                     .build();
 
             var peticion = postWithQuery("http", "localhost", port, "/dieta", Map.of("idEntrenador", "1"), dieta);
-            var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
+            var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
         }
 
@@ -324,7 +349,7 @@ public class DietasApplicationTests {
             var dieta3 = new DietaDTO();
             dieta3.setId(4L);
             var peticion = putWithQuery("http", "localhost", port, "/dieta", Map.of("idCliente", "2"), dieta3);
-            var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
+            var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
         }
 
@@ -332,14 +357,14 @@ public class DietasApplicationTests {
         @DisplayName("elimina una dieta")
         public void eliminaUnaDieta() {
             var peticion = delete("http", "localhost", port, "/dieta/1");
-            var respuesta = restTemplate.exchange(peticion, Void.class);
+            var respuesta = testRestTemplate.exchange(peticion, Void.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
         }
         @Test
         @DisplayName("elimina dieta que no existe")
         public void eliminaDietaQueNoExiste() {
             var peticion = delete("http", "localhost", port, "/dieta/4");
-            var respuesta = restTemplate.exchange(peticion, Void.class);
+            var respuesta = testRestTemplate.exchange(peticion, Void.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
         }
 
@@ -365,7 +390,7 @@ public class DietasApplicationTests {
                     .build();
 
             var peticion = put("http", "localhost", port, "/dieta/3", dieta);
-            var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
+            var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
             Dieta dt = dietaRepository.findById(3L).get();
             assertThat(dt.getNombre()).isEqualTo("Dieta pepe");
@@ -377,7 +402,7 @@ public class DietasApplicationTests {
             var dieta3 = new DietaDTO();
             dieta3.setId(2L);
             var peticion = putWithQuery("http", "localhost", port, "/dieta", Map.of("idCliente", "2"), dieta3);
-            var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
+            var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
         }
 
@@ -407,7 +432,7 @@ public class DietasApplicationTests {
                     .build();
 
             var peticion = put("http", "localhost", port, "/dieta/3", dieta);
-            var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
+            var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
             Dieta dt = dietaRepository.findById(3L).get();
             assertThat(dt.getNombre()).isEqualTo("Dieta pepe");
@@ -419,7 +444,7 @@ public class DietasApplicationTests {
             var dieta3 = new DietaDTO();
             dieta3.setId(2L);
             var peticion = putWithQuery("http", "localhost", port, "/dieta", Map.of("idCliente", "2"), dieta3);
-            var respuesta = restTemplate.exchange(peticion, DietaDTO.class);
+            var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
         }
 
