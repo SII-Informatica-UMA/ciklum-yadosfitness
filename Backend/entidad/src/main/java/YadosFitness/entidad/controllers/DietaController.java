@@ -66,7 +66,7 @@ public class DietaController {
                 .body(dDTO);
         } catch (DietaExistException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        } 
     }
 
     @GetMapping("/{id}")

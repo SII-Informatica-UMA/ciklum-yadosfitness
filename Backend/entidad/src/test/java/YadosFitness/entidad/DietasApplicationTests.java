@@ -61,9 +61,9 @@ public class DietasApplicationTests {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-    /*@Autowired
+    @Autowired
     private RestTemplate restTemplate;
-    */
+    
 
     @Value(value = "${local.server.port}")
     private int port;
