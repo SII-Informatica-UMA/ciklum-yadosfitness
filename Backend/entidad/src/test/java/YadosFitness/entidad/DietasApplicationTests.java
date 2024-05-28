@@ -65,6 +65,8 @@ public class DietasApplicationTests {
     private RestTemplate restTemplate;
     
 
+    
+
     @Value(value = "${local.server.port}")
     private int port;
 
@@ -75,14 +77,14 @@ public class DietasApplicationTests {
     private JwtUtil jwtUtil;
 
 
-    //private MockRestServiceServer mockServer;
+    private MockRestServiceServer mockServer;
 
-    //private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper = new ObjectMapper();
 
     @BeforeEach
     public void initializeDatabase() {
         dietaRepository.deleteAll();
-        //mockServer = MockRestServiceServer.createServer(restTemplate);
+        mockServer = MockRestServiceServer.createServer(restTemplate);
     }
 
     private URI uri(String scheme, String host, int port, String... paths) {

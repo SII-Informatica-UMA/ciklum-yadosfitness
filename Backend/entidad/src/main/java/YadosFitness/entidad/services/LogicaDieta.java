@@ -23,6 +23,9 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -45,8 +48,10 @@ public class LogicaDieta {
     }
 
     public List<Dieta> dietasDeCliente(Long idCliente) {
-        ResponseEntity resp = restTemplate.getForEntity(URL_cliente + "/" + idCliente, ClienteDTO.class);
-        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().toString())) {
+        HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
+        ResponseEntity<ClienteDTO> response1 = restTemplate.exchange(URL_cliente + "/" + idCliente, HttpMethod.GET,entity,ClienteDTO.class);
+        
+        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(response1.getBody().toString())) {
             return repo.findByClienteId(idCliente);
         }else{
             throw new AcessoNoAutorizadoException("No tienes permisos para ver las dietas de otro cliente");
