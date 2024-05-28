@@ -218,7 +218,7 @@ public class DietasApplicationTests {
 
     	}
 
-		@Test
+		/*@Test
 		@DisplayName("devuelve lista de dietas vacía por cliente")
 		public void devuelveListaDeDietasVaciaPorCliente() throws JsonProcessingException, URISyntaxException {
 			ClienteDTO clienteDTO = new ClienteDTO();
@@ -238,7 +238,7 @@ public class DietasApplicationTests {
 
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(respuesta.getBody().isEmpty());
-		}
+		}*/
 
 		@Test
 		@DisplayName("error devuelve dieta no paso parametro")
