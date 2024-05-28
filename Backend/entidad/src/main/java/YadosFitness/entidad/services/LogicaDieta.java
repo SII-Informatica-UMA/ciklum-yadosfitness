@@ -63,27 +63,27 @@ public class LogicaDieta {
         ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);
         
         if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())) {
-            return repo.findByEntrenadorId(idEntrenador);
+            return repo.findAllByEntrenadorId(idEntrenador);
         }else{
             throw new AcessoNoAutorizadoException("No tienes permisos para ver las dietas de otro entrenador");
         }
     }
 
     public void asignarDieta(Long idDieta, Long idCliente) {
+        
+        Optional<Dieta> opt = repo.findById(idDieta);
+            if(!opt.isPresent()){
+                throw new DietaNoExisteException("Dieta no existe");
+            }
         HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
 
         Long idEntrenador = repo.findById(idDieta).get().getEntrenador();
-        ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);
-
-        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())){
-            Optional<Dieta> opt = getDietaById(idDieta);
-            if(opt.isPresent()){
-                Dieta dieta = opt.get();
-                dieta.getCliente().add(idCliente);
-                repo.save(dieta);
-            }else{
-                throw new DietaNoExisteException("Dieta no existe");
-            }
+        ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);;
+        
+        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())){   
+            Dieta dieta = opt.get();
+            dieta.getCliente().add(idCliente);
+            repo.save(dieta);
         }else{
             throw new AcessoNoAutorizadoException("No tienes permisos para asignar dietas");
         }
@@ -105,6 +105,12 @@ public class LogicaDieta {
     }
 
     public Optional<Dieta> getDietaById(Long id){
+        Optional<Dieta> optional= repo.findById(id);
+
+        if(optional.isEmpty()){
+            throw new DietaNoExisteException("Dieta no existente");
+        }
+
         HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
         Dieta dieta = repo.findById(id).get();
         Long idEntrenador = repo.findById(id).get().getEntrenador();
@@ -112,14 +118,7 @@ public class LogicaDieta {
         ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);
         //ResponseEntity resp2 = restTemplate.getForEntity(URL_cliente + "/" + repo.findById(id).get().getCliente(), ClienteDTO.class);
         if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())){
-            Optional<Dieta> optional= repo.findById(id);
-
-            if(optional.isEmpty()){
-                throw new DietaNoExisteException("Dieta no existente");
-            }else{
-                return optional;
-            }
-
+            return optional;
         }else{
             throw new AcessoNoAutorizadoException("No tienes permisos para ver las dietas de otro entrenador");
         }
@@ -127,15 +126,16 @@ public class LogicaDieta {
     }
 
     public Dieta updateDieta(Dieta dieta){
+        if(!repo.existsById(dieta.getId())){
+            throw new DietaNoExisteException("Dieta no existe");
+        }
         HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
         Long idEntrenador = repo.findById(dieta.getId()).get().getEntrenador();
         ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);
         if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())){
-            if(repo.existsById(dieta.getId())){
-                return repo.save(dieta);
-            }else{
-                throw new DietaNoExisteException("Dieta no existe");
-            }
+            
+            return repo.save(dieta);
+            
         }else{
             throw new AcessoNoAutorizadoException("No tienes permisos para modificar dietas");
         }
@@ -143,16 +143,17 @@ public class LogicaDieta {
     }
 
     public void deleteById(Long id){
+        var dieta = repo.findById(id);
+        if(!dieta.isPresent()){
+            throw new DietaNoExisteException("Dieta no existe");
+        }
         HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
         Long idEntrenador = repo.findById(id).get().getEntrenador();
         ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);
         if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())){
-            var dieta = repo.findById(id);
-            if(!dieta.isPresent()){
-                throw new DietaNoExisteException("Dieta no existe");
-            }else{   
-                repo.deleteById(id);
-            }
+              
+            repo.deleteById(id);
+            
         }else{
             throw new AcessoNoAutorizadoException("No tienes permisos para eliminar dietas");
         }

@@ -35,6 +35,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
 import YadosFitness.entidad.controllers.Mapper;
+import YadosFitness.entidad.dtos.ClienteDTO;
 import YadosFitness.entidad.dtos.DietaDTO;
 import YadosFitness.entidad.dtos.DietaNuevaDTO;
 import YadosFitness.entidad.dtos.EntrenadorDTO;
@@ -220,15 +221,16 @@ public class DietasApplicationTests {
 		@Test
 		@DisplayName("devuelve lista de dietas vacía por cliente")
 		public void devuelveListaDeDietasVaciaPorCliente() throws JsonProcessingException, URISyntaxException {
-			EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setId(1L);
+			ClienteDTO clienteDTO = new ClienteDTO();
+            clienteDTO.setId(1L);
             mockServer.expect(ExpectedCount.once(), 
-          requestTo(new URI(URL_entrenador + "/" + 1)))
+          requestTo(new URI(URL_cliente + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
           .andRespond(withStatus(HttpStatus.OK)
           .contentType(MediaType.APPLICATION_JSON)
-          .body(mapper.writeValueAsString(entrenadorDTO))
+          .body(mapper.writeValueAsString(clienteDTO))
         );   
+
             var peticion = getWithQuery("http", "localhost", port, "/dieta", Map.of("idCliente", "2"));
 
 			var respuesta = testRestTemplate.exchange(peticion, new ParameterizedTypeReference<Set<DietaDTO>>() {
@@ -254,7 +256,7 @@ public class DietasApplicationTests {
             var peticion = get("http", "localhost", port, "/dieta");
 			var respuesta = testRestTemplate.exchange(peticion, new ParameterizedTypeReference<String>() {
 			});
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
 		}
 
 		@Test
@@ -272,7 +274,7 @@ public class DietasApplicationTests {
             var peticion = getWithQuery("http", "localhost", port, "/dieta", Map.of("idEntrenador", "1", "idCliente", "2"));
 			var respuesta = testRestTemplate.exchange(peticion, new ParameterizedTypeReference<String>() {
 			});
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
 		}
 
 		@Test
