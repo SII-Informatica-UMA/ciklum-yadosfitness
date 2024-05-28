@@ -7,10 +7,10 @@ import YadosFitness.entidad.services.*;
 
 
 import java.util.List;
-
-
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -29,14 +29,24 @@ public class DietaController {
     }
 
     @GetMapping
-    public List<DietaDTO> getDietas(@RequestParam(value = "idEntrenador", required = false) Long idEntrenador,@RequestParam(value = "idCliente", required = false) Long idCliente){
-        if ((idEntrenador==null && idCliente==null) || (idEntrenador!=null && idCliente!=null)) {
-            throw new IllegalArgumentException("Especificar solo un parametro");
-        }else if (idCliente!=null){
-            return  logicaDieta.dietasDeCliente(idCliente).stream().map(Mapper :: toDietaDTO).toList();
-        }else{
-            return logicaDieta.dietasDeEntrenador(idEntrenador).stream().map(Mapper :: toDietaDTO).toList();
-        }
+    public ResponseEntity<List<DietaDTO>> getDietas(@RequestParam(value = "idEntrenador", required = false) Long idEntrenador,@RequestParam(value = "idCliente", required = false) Long idCliente){
+        try {
+            List<DietaDTO> dietas;
+            if ((idEntrenador==null && idCliente==null) || (idEntrenador!=null && idCliente!=null)) {
+                return ResponseEntity.badRequest().build();
+            }else if (idCliente!=null){
+                dietas = logicaDieta.dietasDeCliente(idCliente).stream().map(Mapper :: toDietaDTO).toList();
+                return ResponseEntity.of(Optional.of(dietas));
+            }else{
+                dietas = logicaDieta.dietasDeEntrenador(idEntrenador).stream().map(Mapper :: toDietaDTO).toList();
+                return ResponseEntity.of(Optional.of(dietas));
+            }
+        } catch (AcessoNoAutorizadoException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (DietaNoExisteException e) {
+            return ResponseEntity.notFound().build();
+        } 
+        
         
     }
 
@@ -47,6 +57,8 @@ public class DietaController {
             return ResponseEntity.ok().build();
         } catch (DietaNoExisteException e) {
             return ResponseEntity.notFound().build();
+        } catch (AcessoNoAutorizadoException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         
     }
@@ -65,21 +77,20 @@ public class DietaController {
                     .toUri())
                 .body(dDTO);
         } catch (DietaExistException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (AcessoNoAutorizadoException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } 
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DietaDTO> getDieta(@PathVariable Long id) {
         try {
-            if(id == null){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            }else{
-                return ResponseEntity.of(logicaDieta.getDietaById(id).map(Mapper::toDietaDTO));
-            }
-           
+            return ResponseEntity.of(logicaDieta.getDietaById(id).map(Mapper::toDietaDTO));
         } catch (DietaNoExisteException e) {
             return ResponseEntity.notFound().build();
+        } catch (AcessoNoAutorizadoException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         
     }
@@ -92,6 +103,8 @@ public class DietaController {
             return ResponseEntity.ok().build();
         } catch (DietaNoExisteException e) {
             return ResponseEntity.notFound().build();
+        } catch (AcessoNoAutorizadoException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
@@ -102,6 +115,8 @@ public class DietaController {
             return ResponseEntity.ok().build();
         } catch (DietaNoExisteException e) {
             return ResponseEntity.notFound().build();
+        } catch (AcessoNoAutorizadoException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
