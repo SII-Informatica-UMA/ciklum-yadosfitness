@@ -49,9 +49,9 @@ public class LogicaDieta {
 
     public List<Dieta> dietasDeCliente(Long idCliente) {
         HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
-        ResponseEntity<ClienteDTO> response1 = restTemplate.exchange(URL_cliente + "/" + idCliente, HttpMethod.GET,entity,ClienteDTO.class);
+        ResponseEntity<ClienteDTO> resp = restTemplate.exchange(URL_cliente + "/" + idCliente, HttpMethod.GET,entity,ClienteDTO.class);
         
-        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(response1.getBody().toString())) {
+        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())) {
             return repo.findByClienteId(idCliente);
         }else{
             throw new AcessoNoAutorizadoException("No tienes permisos para ver las dietas de otro cliente");
@@ -59,8 +59,10 @@ public class LogicaDieta {
     }
 
     public List<Dieta> dietasDeEntrenador(Long idEntrenador) {
-        ResponseEntity resp = restTemplate.getForEntity(URL_entrenador + "/" + idEntrenador, ClienteDTO.class);
-        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().toString())) {
+        HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
+        ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);
+        
+        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())) {
             return repo.findByEntrenadorId(idEntrenador);
         }else{
             throw new AcessoNoAutorizadoException("No tienes permisos para ver las dietas de otro entrenador");
@@ -68,9 +70,12 @@ public class LogicaDieta {
     }
 
     public void asignarDieta(Long idDieta, Long idCliente) {
+        HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
+
         Long idEntrenador = repo.findById(idDieta).get().getEntrenador();
-        ResponseEntity resp = restTemplate.getForEntity(URL_entrenador + "/" + idEntrenador, EntrenadorDTO.class);
-        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().toString())){
+        ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);
+
+        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())){
             Optional<Dieta> opt = getDietaById(idDieta);
             if(opt.isPresent()){
                 Dieta dieta = opt.get();
@@ -86,8 +91,9 @@ public class LogicaDieta {
     }
 
     public Dieta addDieta(Dieta dieta){
-        ResponseEntity resp = restTemplate.getForEntity(URL_entrenador + "/" + dieta.getEntrenador(), EntrenadorDTO.class);
-        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().toString())){
+        HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
+        ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + dieta.getEntrenador(), HttpMethod.GET,entity,EntrenadorDTO.class);
+        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())){
             if(repo.findByNombre(dieta.getNombre()).isPresent() ){
                 throw new DietaExistException("Dieta ya existente");
             }
@@ -99,12 +105,13 @@ public class LogicaDieta {
     }
 
     public Optional<Dieta> getDietaById(Long id){
+        HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
         Dieta dieta = repo.findById(id).get();
         Long idEntrenador = repo.findById(id).get().getEntrenador();
         //Set<Long> clientes = repo.findById(id).get().getCliente();
-        ResponseEntity resp = restTemplate.getForEntity(URL_entrenador + "/" + idEntrenador, EntrenadorDTO.class);
+        ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);
         //ResponseEntity resp2 = restTemplate.getForEntity(URL_cliente + "/" + repo.findById(id).get().getCliente(), ClienteDTO.class);
-        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().toString())){
+        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())){
             Optional<Dieta> optional= repo.findById(id);
 
             if(optional.isEmpty()){
@@ -120,9 +127,10 @@ public class LogicaDieta {
     }
 
     public Dieta updateDieta(Dieta dieta){
+        HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
         Long idEntrenador = repo.findById(dieta.getId()).get().getEntrenador();
-        ResponseEntity resp = restTemplate.getForEntity(URL_entrenador + "/" + idEntrenador, EntrenadorDTO.class);
-        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().toString())){
+        ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);
+        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())){
             if(repo.existsById(dieta.getId())){
                 return repo.save(dieta);
             }else{
@@ -135,9 +143,10 @@ public class LogicaDieta {
     }
 
     public void deleteById(Long id){
+        HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
         Long idEntrenador = repo.findById(id).get().getEntrenador();
-        ResponseEntity resp = restTemplate.getForEntity(URL_entrenador + "/" +idEntrenador, EntrenadorDTO.class);
-        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().toString())){
+        ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);
+        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())){
             var dieta = repo.findById(id);
             if(!dieta.isPresent()){
                 throw new DietaNoExisteException("Dieta no existe");
