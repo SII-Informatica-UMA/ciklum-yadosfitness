@@ -114,10 +114,12 @@ public class LogicaDieta {
         HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
         Dieta dieta = repo.findById(id).get();
         Long idEntrenador = repo.findById(id).get().getEntrenador();
-        //Set<Long> clientes = repo.findById(id).get().getCliente();
+        Set<Long> clientes = repo.findById(id).get().getCliente();
         ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);
         //ResponseEntity resp2 = restTemplate.getForEntity(URL_cliente + "/" + repo.findById(id).get().getCliente(), ClienteDTO.class);
         if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())){
+            return optional;
+        }else if(clientes.contains(Long.parseLong(SecurityConfguration.getAuthenticatedUser().get().getUsername()))){
             return optional;
         }else{
             throw new AcessoNoAutorizadoException("No tienes permisos para ver las dietas de otro entrenador");
