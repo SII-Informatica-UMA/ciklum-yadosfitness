@@ -23,15 +23,18 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jersey.JerseyProperties.Servlet;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.servlet.ServletException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -51,7 +54,7 @@ public class LogicaDieta {
         HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
         ResponseEntity<ClienteDTO> resp = restTemplate.exchange(URL_cliente + "/" + idCliente, HttpMethod.GET,entity,ClienteDTO.class);
         
-        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())) {
+        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getIdUsuario().toString())) {
             return repo.findByClienteId(idCliente);
         }else{
             throw new AcessoNoAutorizadoException("No tienes permisos para ver las dietas de otro cliente");
@@ -62,7 +65,7 @@ public class LogicaDieta {
         HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
         ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);
         
-        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())) {
+        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getIdUsuario().toString())) {
             return repo.findAllByEntrenadorId(idEntrenador);
         }else{
             throw new AcessoNoAutorizadoException("No tienes permisos para ver las dietas de otro entrenador");
@@ -80,7 +83,7 @@ public class LogicaDieta {
         Long idEntrenador = repo.findById(idDieta).get().getEntrenador();
         ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);;
         
-        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())){   
+        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getIdUsuario().toString())){   
             Dieta dieta = opt.get();
             dieta.getCliente().add(idCliente);
             repo.save(dieta);
@@ -93,7 +96,7 @@ public class LogicaDieta {
     public Dieta addDieta(Dieta dieta){
         HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
         ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + dieta.getEntrenador(), HttpMethod.GET,entity,EntrenadorDTO.class);
-        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())){
+        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getIdUsuario().toString())){
             if(repo.findByNombre(dieta.getNombre()).isPresent() ){
                 throw new DietaExistException("Dieta ya existente");
             }
@@ -117,7 +120,7 @@ public class LogicaDieta {
         Set<Long> clientes = repo.findById(id).get().getCliente();
         ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);
         //ResponseEntity resp2 = restTemplate.getForEntity(URL_cliente + "/" + repo.findById(id).get().getCliente(), ClienteDTO.class);
-        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())){
+        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getIdUsuario().toString())){
             return optional;
         }else if(clientes.contains(Long.parseLong(SecurityConfguration.getAuthenticatedUser().get().getUsername()))){
             return optional;
@@ -134,7 +137,7 @@ public class LogicaDieta {
         HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
         Long idEntrenador = repo.findById(dieta.getId()).get().getEntrenador();
         ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);
-        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())){
+        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getIdUsuario().toString())){
             
             return repo.save(dieta);
             
@@ -152,10 +155,8 @@ public class LogicaDieta {
         HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
         Long idEntrenador = repo.findById(id).get().getEntrenador();
         ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);
-        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getId().toString())){
-              
+        if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getIdUsuario().toString())){
             repo.deleteById(id);
-            
         }else{
             throw new AcessoNoAutorizadoException("No tienes permisos para eliminar dietas");
         }

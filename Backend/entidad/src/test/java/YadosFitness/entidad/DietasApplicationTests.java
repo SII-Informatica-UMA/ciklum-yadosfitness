@@ -200,7 +200,7 @@ public class DietasApplicationTests {
         @DisplayName("devuelve lista de dietas vacía por entrenador")
         public void devuelveListaDeDietasVaciaPorEntrenador() throws JsonProcessingException, URISyntaxException {
             EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setId(1L);
+            entrenadorDTO.setIdUsuario(1L);
             mockServer.expect(ExpectedCount.once(), 
           requestTo(new URI(URL_entrenador + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
@@ -218,11 +218,11 @@ public class DietasApplicationTests {
 
     	}
 
-		/*@Test
+		@Test
 		@DisplayName("devuelve lista de dietas vacía por cliente")
 		public void devuelveListaDeDietasVaciaPorCliente() throws JsonProcessingException, URISyntaxException {
 			ClienteDTO clienteDTO = new ClienteDTO();
-            clienteDTO.setId(1L);
+            clienteDTO.setIdUsuario(1L);
             mockServer.expect(ExpectedCount.once(), 
           requestTo(new URI(URL_cliente + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
@@ -238,14 +238,14 @@ public class DietasApplicationTests {
 
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(respuesta.getBody().isEmpty());
-		}*/
+		}
 
 		@Test
 		@DisplayName("error devuelve dieta no paso parametro")
 
 		public void errorDevuelveDietaNoPasoParametro() throws JsonProcessingException, URISyntaxException {
 			EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setId(1L);
+            entrenadorDTO.setIdUsuario(1L);
             mockServer.expect(ExpectedCount.once(), 
           requestTo(new URI(URL_entrenador + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
@@ -263,7 +263,7 @@ public class DietasApplicationTests {
 		@DisplayName("error devuelve dieta paso dos parametros")
 		public void errorDevuelveDietaPasoDosParametros() throws JsonProcessingException, URISyntaxException {
 			EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setId(1L);
+            entrenadorDTO.setIdUsuario(1L);
             mockServer.expect(ExpectedCount.once(), 
           requestTo(new URI(URL_entrenador + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
@@ -281,7 +281,7 @@ public class DietasApplicationTests {
 		@DisplayName("entrenador añade una dieta")
 		public void entrenadorAnadeUnaDieta() throws JsonProcessingException, URISyntaxException {
 			EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setId(1L);
+            entrenadorDTO.setIdUsuario(1L);
             mockServer.expect(ExpectedCount.once(), 
           requestTo(new URI(URL_entrenador + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
@@ -311,7 +311,7 @@ public class DietasApplicationTests {
         @DisplayName("actualiza dieta que no existe")
         public void actualizaDietaQueNoExiste() throws JsonProcessingException, URISyntaxException {
             EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setId(1L);
+            entrenadorDTO.setIdUsuario(1L);
             mockServer.expect(ExpectedCount.once(), 
           requestTo(new URI(URL_entrenador + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
@@ -338,7 +338,7 @@ public class DietasApplicationTests {
         @DisplayName("devuelve dieta que no existe")
         public void devuelveDietaQueNoExiste() throws JsonProcessingException, URISyntaxException {
             EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setId(1L);
+            entrenadorDTO.setIdUsuario(1L);
             mockServer.expect(ExpectedCount.once(), 
           requestTo(new URI(URL_entrenador + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
@@ -377,12 +377,21 @@ public class DietasApplicationTests {
             dieta2.setObjetivo("Aumentar peso");
             dieta2.setEntrenador(1L);
             dietaRepository.save(dieta2);
+
+            var dieta5 = new Dieta();
+            dieta5.setId(5L);
+            dieta5.setNombre("Dieta 5");
+            dieta5.setDescripcion("Dieta para mantenerse");
+            dieta5.setObservaciones("Comer dulces");
+            dieta5.setObjetivo("Aumentar peso");
+            dieta5.setEntrenador(1L);
+            dietaRepository.save(dieta5);
         }
         @Test
         @DisplayName("devuelve una dieta por id")
         public void devuelveUnaDietaPorId() throws Exception {
             EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setId(1L);
+            entrenadorDTO.setIdUsuario(1L);
             mockServer.expect(ExpectedCount.once(), 
           requestTo(new URI(URL_entrenador + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
@@ -402,7 +411,7 @@ public class DietasApplicationTests {
         @DisplayName("añadir dieta ya existente")
         public void añadirDietaYaExistente() throws JsonProcessingException, URISyntaxException {
             EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setId(1L);
+            entrenadorDTO.setIdUsuario(1L);
             mockServer.expect(ExpectedCount.once(), 
           requestTo(new URI(URL_entrenador + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
@@ -430,7 +439,7 @@ public class DietasApplicationTests {
         @DisplayName("error asignar cliente a dieta que no existe")
         public void errorasignarClienteADieta() throws JsonProcessingException, URISyntaxException {
             EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setId(1L);
+            entrenadorDTO.setIdUsuario(1L);
             mockServer.expect(ExpectedCount.once(), 
           requestTo(new URI(URL_entrenador + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
@@ -449,7 +458,7 @@ public class DietasApplicationTests {
         @DisplayName("elimina correctamente una dieta")
         public void eliminaUnaDieta() throws JsonProcessingException, URISyntaxException {
             EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setId(1L);
+            entrenadorDTO.setIdUsuario(1L);
             mockServer.expect(ExpectedCount.once(), 
           requestTo(new URI(URL_entrenador + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
@@ -462,11 +471,12 @@ public class DietasApplicationTests {
             var respuesta = testRestTemplate.exchange(peticion, Void.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
         }
+
         @Test
         @DisplayName("elimina dieta que no existe")
         public void eliminaDietaQueNoExiste() throws JsonProcessingException, URISyntaxException {
             EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setId(1L);
+            entrenadorDTO.setIdUsuario(1L);
             mockServer.expect(ExpectedCount.once(), 
           requestTo(new URI(URL_entrenador + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
@@ -483,7 +493,7 @@ public class DietasApplicationTests {
         @DisplayName("actualiza una dieta")
         public void actualizaUnaDieta() throws JsonProcessingException, URISyntaxException {
             EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setId(1L);
+            entrenadorDTO.setIdUsuario(1L);
             mockServer.expect(ExpectedCount.once(), 
           requestTo(new URI(URL_entrenador + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
@@ -520,7 +530,7 @@ public class DietasApplicationTests {
         @DisplayName("asignar cliente a dieta")
         public void asignarClienteADieta() throws JsonProcessingException, URISyntaxException {
             EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setId(1L);
+            entrenadorDTO.setIdUsuario(1L);
             mockServer.expect(ExpectedCount.once(), 
           requestTo(new URI(URL_entrenador + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
@@ -536,24 +546,41 @@ public class DietasApplicationTests {
         }
 
         @Test
-        @DisplayName("actualiza dieta entrenador sin acceso")
-        public void actualizaDietaEntrenadorSinAcceso() throws JsonProcessingException, URISyntaxException {
-            /*EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setId(2L);
+        @DisplayName("Acceso no autorizado al get de una dieta concreta")
+        public void accesoNoAutorizadoAlGetDeUnaDietaConcreta() throws JsonProcessingException, URISyntaxException {
+            EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
+            entrenadorDTO.setIdUsuario(2L);
             mockServer.expect(ExpectedCount.once(), 
-          requestTo(new URI(URL_entrenador + "/" + 2)))
+          requestTo(new URI(URL_entrenador + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
           .andRespond(withStatus(HttpStatus.OK)
           .contentType(MediaType.APPLICATION_JSON)
           .body(mapper.writeValueAsString(entrenadorDTO))
-        );   */
+        );   
+            var peticion = get("http", "localhost", port, "/dieta/1");
+            var respuesta = testRestTemplate.exchange(peticion, String.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+        }
+
+        @Test
+        @DisplayName("actualizar una dieta sin acceso")
+        public void actualizaUnaDietaSinAcceso() throws JsonProcessingException, URISyntaxException {
+            EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
+            entrenadorDTO.setIdUsuario(2L);
+            mockServer.expect(ExpectedCount.once(), 
+          requestTo(new URI(URL_entrenador + "/" + 1)))
+          .andExpect(method(HttpMethod.GET))
+          .andRespond(withStatus(HttpStatus.OK)
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(mapper.writeValueAsString(entrenadorDTO))
+        );   
             var dieta3 = new Dieta();
             dieta3.setId(3L);
             dieta3.setNombre("Dieta 3");
             dieta3.setDescripcion("Dieta para mantener");
             dieta3.setObservaciones("Comer sano");
             dieta3.setObjetivo("Mantener peso");
-            dieta3.setEntrenador(10L);
+            dieta3.setEntrenador(1L);
             dietaRepository.save(dieta3);
 
             var dieta = DietaDTO.builder()
@@ -571,12 +598,12 @@ public class DietasApplicationTests {
         }
 
         @Test
-        @DisplayName("elimina una dieta sin acceso")
-        public void eliminaUnaDietaSinAcceso() throws JsonProcessingException, URISyntaxException {
+        @DisplayName("intenta eliminar sin acceso una dieta")
+        public void eliminarUnaDietaSinAcceso() throws JsonProcessingException, URISyntaxException {
             EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setId(10L);
+            entrenadorDTO.setIdUsuario(2L);
             mockServer.expect(ExpectedCount.once(), 
-          requestTo(new URI(URL_entrenador + "/" + 10)))
+          requestTo(new URI(URL_entrenador + "/" + 1)))
           .andExpect(method(HttpMethod.GET))
           .andRespond(withStatus(HttpStatus.OK)
           .contentType(MediaType.APPLICATION_JSON)
