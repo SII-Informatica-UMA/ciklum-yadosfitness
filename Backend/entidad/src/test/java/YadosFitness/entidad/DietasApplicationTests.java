@@ -535,6 +535,59 @@ public class DietasApplicationTests {
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
         }
 
+        @Test
+        @DisplayName("actualiza dieta entrenador sin acceso")
+        public void actualizaDietaEntrenadorSinAcceso() throws JsonProcessingException, URISyntaxException {
+            /*EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
+            entrenadorDTO.setId(2L);
+            mockServer.expect(ExpectedCount.once(), 
+          requestTo(new URI(URL_entrenador + "/" + 2)))
+          .andExpect(method(HttpMethod.GET))
+          .andRespond(withStatus(HttpStatus.OK)
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(mapper.writeValueAsString(entrenadorDTO))
+        );   */
+            var dieta3 = new Dieta();
+            dieta3.setId(3L);
+            dieta3.setNombre("Dieta 3");
+            dieta3.setDescripcion("Dieta para mantener");
+            dieta3.setObservaciones("Comer sano");
+            dieta3.setObjetivo("Mantener peso");
+            dieta3.setEntrenador(10L);
+            dietaRepository.save(dieta3);
+
+            var dieta = DietaDTO.builder()
+                    .nombre("Dieta pepe")
+                    .descripcion("Dieta para adelgazar")
+                    .observaciones("No comer dulces")
+                    .objetivo("Perder peso")
+                    .duracionDias(30)
+                    .recomendaciones("Hacer ejercicio")
+                    .build();
+
+            var peticion = put("http", "localhost", port, "/dieta/3", dieta);
+            var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+        }
+
+        @Test
+        @DisplayName("elimina una dieta sin acceso")
+        public void eliminaUnaDietaSinAcceso() throws JsonProcessingException, URISyntaxException {
+            EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
+            entrenadorDTO.setId(10L);
+            mockServer.expect(ExpectedCount.once(), 
+          requestTo(new URI(URL_entrenador + "/" + 10)))
+          .andExpect(method(HttpMethod.GET))
+          .andRespond(withStatus(HttpStatus.OK)
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(mapper.writeValueAsString(entrenadorDTO))
+        );   
+
+            var peticion = delete("http", "localhost", port, "/dieta/2");
+            var respuesta = testRestTemplate.exchange(peticion, Void.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+        }
+
     }
 
 }
