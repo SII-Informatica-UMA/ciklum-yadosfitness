@@ -306,7 +306,7 @@ public class DietasApplicationTests {
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 			assertThat(respuesta.getBody().getNombre()).isEqualTo("Dieta 1");
 		}
-
+        //MAL
         @Test
         @DisplayName("actualiza dieta que no existe")
         public void actualizaDietaQueNoExiste() throws JsonProcessingException, URISyntaxException {
@@ -526,7 +526,7 @@ public class DietasApplicationTests {
             Dieta dt = dietaRepository.findById(3L).get();
             assertThat(dt.getNombre()).isEqualTo("Dieta pepe");
         }
-
+        //MAL
         @Test
         @DisplayName("asignar cliente a dieta")
         public void asignarClienteADieta() throws JsonProcessingException, URISyntaxException {
