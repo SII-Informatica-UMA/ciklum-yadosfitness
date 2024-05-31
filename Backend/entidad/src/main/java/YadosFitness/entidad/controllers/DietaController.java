@@ -43,9 +43,7 @@ public class DietaController {
             }
         } catch (AcessoNoAutorizadoException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } catch (DietaNoExisteException e) {
-            return ResponseEntity.notFound().build();
-        } 
+        }
         
         
     }
@@ -98,6 +96,9 @@ public class DietaController {
     @PutMapping("/{id}")
     public ResponseEntity<DietaDTO> putDietaId(@PathVariable Long id, @RequestBody DietaDTO dietaDTO) {
         try {
+            if (id <= 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
             dietaDTO.setId(id);
             logicaDieta.updateDieta(Mapper.toDietaId(dietaDTO));
             return ResponseEntity.ok().build();
@@ -111,6 +112,9 @@ public class DietaController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDieta(@PathVariable Long id){
         try {
+            if (id <= 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
             logicaDieta.deleteById(id);
             return ResponseEntity.ok().build();
         } catch (DietaNoExisteException e) {
@@ -120,13 +124,4 @@ public class DietaController {
         }
     }
 
-    /* 
-    @ExceptionHandler(DietaNoExisteException.class)
-	@ResponseStatus(code = HttpStatus.NOT_FOUND)
-	public void noEncontrado() {}
-
-	@ExceptionHandler(DietaExistException.class)
-	@ResponseStatus(code = HttpStatus.FORBIDDEN)
-	public void existente() {}
-    */
 }

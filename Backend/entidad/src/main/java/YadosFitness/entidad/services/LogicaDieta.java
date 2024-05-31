@@ -53,7 +53,6 @@ public class LogicaDieta {
     public List<Dieta> dietasDeCliente(Long idCliente) {
         HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
         ResponseEntity<ClienteDTO> resp = restTemplate.exchange(URL_cliente + "/" + idCliente, HttpMethod.GET,entity,ClienteDTO.class);
-        
         if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getIdUsuario().toString())) {
             return repo.findByClienteId(idCliente);
         }else{
@@ -115,11 +114,9 @@ public class LogicaDieta {
         }
 
         HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
-        Dieta dieta = repo.findById(id).get();
         Long idEntrenador = repo.findById(id).get().getEntrenador();
         Set<Long> clientes = repo.findById(id).get().getCliente();
         ResponseEntity<EntrenadorDTO> resp = restTemplate.exchange(URL_entrenador + "/" + idEntrenador, HttpMethod.GET,entity,EntrenadorDTO.class);
-        //ResponseEntity resp2 = restTemplate.getForEntity(URL_cliente + "/" + repo.findById(id).get().getCliente(), ClienteDTO.class);
         if(SecurityConfguration.getAuthenticatedUser().get().getUsername().equals(resp.getBody().getIdUsuario().toString())){
             return optional;
         }else if(clientes.contains(Long.parseLong(SecurityConfguration.getAuthenticatedUser().get().getUsername()))){

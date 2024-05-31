@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 import YadosFitness.entidad.entities.Dieta;
 
 public interface DietaRepository extends JpaRepository<Dieta, Long> {
-    @Query("SELECT d FROM Dieta d WHERE :idCliente MEMBER OF d.clienteId") //Hay que darle una vuelta a esta query
+    @Query("SELECT d FROM Dieta d WHERE :idCliente IN elements(d.clienteId)")
     List<Dieta> findByClienteId(Long idCliente);
     
     Optional<Dieta> findByNombre(String nombre);

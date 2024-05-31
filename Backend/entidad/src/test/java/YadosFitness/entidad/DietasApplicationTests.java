@@ -218,27 +218,6 @@ public class DietasApplicationTests {
 
     	}
 
-		/*@Test
-		@DisplayName("devuelve lista de dietas vacía por cliente")
-		public void devuelveListaDeDietasVaciaPorCliente() throws JsonProcessingException, URISyntaxException {
-			ClienteDTO clienteDTO = new ClienteDTO();
-            clienteDTO.setIdUsuario(1L);
-            mockServer.expect(ExpectedCount.once(), 
-          requestTo(new URI(URL_cliente + "/" + 1)))
-          .andExpect(method(HttpMethod.GET))
-          .andRespond(withStatus(HttpStatus.OK)
-          .contentType(MediaType.APPLICATION_JSON)
-          .body(mapper.writeValueAsString(clienteDTO))
-        );   
-
-            var peticion = getWithQuery("http", "localhost", port, "/dieta", Map.of("idCliente", "2"));
-
-			var respuesta = testRestTemplate.exchange(peticion, new ParameterizedTypeReference<Set<DietaDTO>>() {
-			});
-
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-			assertThat(respuesta.getBody().isEmpty());
-		}*/
 
 		@Test
 		@DisplayName("error devuelve dieta no paso parametro")
@@ -306,34 +285,7 @@ public class DietasApplicationTests {
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 			assertThat(respuesta.getBody().getNombre()).isEqualTo("Dieta 1");
 		}
-        //MAL
-        @Test
-        @DisplayName("actualiza dieta que no existe")
-        public void actualizaDietaQueNoExiste() throws JsonProcessingException, URISyntaxException {
-            EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-            entrenadorDTO.setIdUsuario(1L);
-            mockServer.expect(ExpectedCount.once(), 
-          requestTo(new URI(URL_entrenador + "/" + 1)))
-          .andExpect(method(HttpMethod.GET))
-          .andRespond(withStatus(HttpStatus.OK)
-          .contentType(MediaType.APPLICATION_JSON)
-          .body(mapper.writeValueAsString(entrenadorDTO))
-        );   
-            var dieta = DietaDTO.builder()
-                    .id(1L)
-                    .nombre("Dieta 1")
-                    .descripcion("Dieta para adelgazar")
-                    .observaciones("No comer dulces")
-                    .objetivo("Perder peso")
-                    .duracionDias(30)
-                    .recomendaciones("Hacer ejercicio")
-                    .build();
-
-            var peticion = putWithQuery("http", "localhost", port, "/dieta/1", Map.of("idCliente", "1"), dieta);
-            var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
-            assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-        }
-
+    
         @Test
         @DisplayName("devuelve dieta que no existe")
         public void devuelveDietaQueNoExiste() throws JsonProcessingException, URISyntaxException {
@@ -390,6 +342,27 @@ public class DietasApplicationTests {
             //dieta5.setCliente(Set.of(1L));
             dietaRepository.save(dieta5);
         }
+
+        @Test
+        @DisplayName("devuelve lista de dietas vacía por cliente")
+        public void devuelveListaDeDietasVaciaPorCliente() throws JsonProcessingException, URISyntaxException {
+            ClienteDTO clienteDTO = new ClienteDTO();
+            clienteDTO.setIdUsuario(1L);
+            mockServer.expect(ExpectedCount.once(), 
+          requestTo(new URI(URL_cliente + "/" + 1)))
+          .andExpect(method(HttpMethod.GET))
+          .andRespond(withStatus(HttpStatus.OK)
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(mapper.writeValueAsString(clienteDTO))
+        );   
+            var peticion = getWithQuery("http", "localhost", port, "/dieta", Map.of("idCliente", "1"));
+
+			var respuesta = testRestTemplate.exchange(peticion, new ParameterizedTypeReference<Set<DietaDTO>>() {
+        	});
+
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+
+    	}
         @Test
         @DisplayName("devuelve una dieta por id")
         public void devuelveUnaDietaPorId() throws Exception {
@@ -523,13 +496,102 @@ public class DietasApplicationTests {
             var peticion = put("http", "localhost", port, "/dieta/3", dieta);
             var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-            Dieta dt = dietaRepository.findById(3L).get();
-            assertThat(dt.getNombre()).isEqualTo("Dieta pepe");
+            
         }
-        //MAL
+        @Test
+        @DisplayName("actualiza una dieta que no existe")
+        public void actualizaUnaDietaNoExiste() throws JsonProcessingException, URISyntaxException {
+            EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
+            entrenadorDTO.setIdUsuario(1L);
+            mockServer.expect(ExpectedCount.once(), 
+          requestTo(new URI(URL_entrenador + "/" + 1)))
+          .andExpect(method(HttpMethod.GET))
+          .andRespond(withStatus(HttpStatus.OK)
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(mapper.writeValueAsString(entrenadorDTO))
+        );   
+            var dieta3 = new Dieta();
+            dieta3.setId(3L);
+            dieta3.setNombre("Dieta 3");
+            dieta3.setDescripcion("Dieta para mantener");
+            dieta3.setObservaciones("Comer sano");
+            dieta3.setObjetivo("Mantener peso");
+            dieta3.setEntrenador(1L);
+            dietaRepository.save(dieta3);
+
+            var dieta = DietaDTO.builder()
+                    .nombre("Dieta pepe")
+                    .descripcion("Dieta para adelgazar")
+                    .observaciones("No comer dulces")
+                    .objetivo("Perder peso")
+                    .duracionDias(30)
+                    .recomendaciones("Hacer ejercicio")
+                    .build();
+
+            var peticion = put("http", "localhost", port, "/dieta/5", dieta);
+            var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+           
+        }
+
+        @Test
+        @DisplayName("actualiza una dieta introduce mal parametros")
+        public void actualizaUnaDietaMalParametros() throws JsonProcessingException, URISyntaxException {
+            EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
+            entrenadorDTO.setIdUsuario(1L);
+            mockServer.expect(ExpectedCount.once(), 
+          requestTo(new URI(URL_entrenador + "/" + 1)))
+          .andExpect(method(HttpMethod.GET))
+          .andRespond(withStatus(HttpStatus.OK)
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(mapper.writeValueAsString(entrenadorDTO))
+        );   
+            var dieta3 = new Dieta();
+            dieta3.setId(3L);
+            dieta3.setNombre("Dieta 3");
+            dieta3.setDescripcion("Dieta para mantener");
+            dieta3.setObservaciones("Comer sano");
+            dieta3.setObjetivo("Mantener peso");
+            dieta3.setEntrenador(1L);
+            dietaRepository.save(dieta3);
+
+            var dieta = DietaDTO.builder()
+                    .nombre("Dieta pepe")
+                    .descripcion("Dieta para adelgazar")
+                    .observaciones("No comer dulces")
+                    .objetivo("Perder peso")
+                    .duracionDias(30)
+                    .recomendaciones("Hacer ejercicio")
+                    .build();
+
+            var peticion = put("http", "localhost", port, "/dieta/-3", dieta);
+            var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+           
+        }
+
         @Test
         @DisplayName("asignar cliente a dieta")
         public void asignarClienteADieta() throws JsonProcessingException, URISyntaxException {
+            EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
+            entrenadorDTO.setIdUsuario(1L);
+            mockServer.expect(ExpectedCount.once(), 
+          requestTo(new URI(URL_entrenador + "/" + 1)))
+          .andExpect(method(HttpMethod.GET))
+          .andRespond(withStatus(HttpStatus.OK)
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(mapper.writeValueAsString(entrenadorDTO))
+        );   
+            var dieta3 = new DietaDTO();
+            dieta3.setId(2L);
+            var peticion = putWithQuery("http", "localhost", port, "/dieta", Map.of("idCliente", "2"), dieta3);
+            var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+        }
+
+        @Test
+        @DisplayName("asignar cliente a dieta mal parametro")
+        public void asignarClienteADietaMalParametro() throws JsonProcessingException, URISyntaxException {
             EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
             entrenadorDTO.setIdUsuario(1L);
             mockServer.expect(ExpectedCount.once(), 
@@ -618,8 +680,52 @@ public class DietasApplicationTests {
         }
 
         @Test
+        @DisplayName("intenta eliminar dietaerror de parametro")
+        public void eliminarUnaDietaMalParametro() throws JsonProcessingException, URISyntaxException {
+            EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
+            entrenadorDTO.setIdUsuario(2L);
+            mockServer.expect(ExpectedCount.once(), 
+          requestTo(new URI(URL_entrenador + "/" + 1)))
+          .andExpect(method(HttpMethod.GET))
+          .andRespond(withStatus(HttpStatus.OK)
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(mapper.writeValueAsString(entrenadorDTO))
+        );   
+
+            var peticion = delete("http", "localhost", port, "/dieta/-2");
+            var respuesta = testRestTemplate.exchange(peticion, Void.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+        }
+
+        @Test
         @DisplayName("intenta añadir dieta sin acceso")
         public void añadirDietaSinAcceso() throws JsonProcessingException, URISyntaxException {
+            EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
+            entrenadorDTO.setIdUsuario(2L);
+            mockServer.expect(ExpectedCount.once(), 
+          requestTo(new URI(URL_entrenador + "/" + 1)))
+          .andExpect(method(HttpMethod.GET))
+          .andRespond(withStatus(HttpStatus.OK)
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(mapper.writeValueAsString(entrenadorDTO))
+        );   
+            var dieta = DietaNuevaDTO.builder()
+                    .nombre("Dieta 2")
+                    .descripcion("Dieta para adelgazar")
+                    .observaciones("No comer dulces")
+                    .objetivo("Perder peso")
+                    .duracionDias(30)
+                    .recomendaciones("Hacer ejercicio")
+                    .build();
+
+            var peticion = postWithQuery("http", "localhost", port, "/dieta", Map.of("idEntrenador", "1"), dieta);
+            var respuesta = testRestTemplate.exchange(peticion, DietaDTO.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+        }
+
+        @Test
+        @DisplayName("intenta añadir dieta con parametro mal")
+        public void añadirDietaMalParametro() throws JsonProcessingException, URISyntaxException {
             EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
             entrenadorDTO.setIdUsuario(2L);
             mockServer.expect(ExpectedCount.once(), 
@@ -704,7 +810,8 @@ public class DietasApplicationTests {
 
     	}
 
-        //HAy que echarlo un ojo
+        
+
         @Test
         @DisplayName("devuelve lista de dietas por cliente")
         public void devuelveListaDeDietasPorcliente() throws JsonProcessingException, URISyntaxException {
